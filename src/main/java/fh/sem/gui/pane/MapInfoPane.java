@@ -9,25 +9,46 @@ import javafx.geometry.*;
 
 public class MapInfoPane extends HBox {
     public MapInfoPane(MapPane mapPane) {
-        Label lbl_tile_title = new Label();
-        Label lbl_tile_coords = new Label();
-        Label lbl_tile_solid = new Label("Solid:");
-        HBox hbx_lbls = new HBox(lbl_tile_title, lbl_tile_coords, lbl_tile_solid);
+        Label lbl_coordx = new Label("X:");
+        Label lbl_coordy = new Label("Y:");
+        Label lbl_solid = new Label("Solid:");
+        Label lbl_mode = new Label("Selection Mode:");
 
+        Label lbl_title_v = new Label();
+        Label lbl_coordx_v = new Label();
+        Label lbl_coordy_v = new Label();
+        Label lbl_solid_v = new Label();
+        Label lbl_mode_v = new Label();
+
+        HBox hbx_lbls = new HBox(
+            new HBox(lbl_title_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_coordx, lbl_coordx_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_coordy, lbl_coordy_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_solid, lbl_solid_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_mode, lbl_mode_v) {{ setAlignment(Pos.CENTER); }}
+        );
+
+        HBox.setHgrow(hbx_lbls, Priority.ALWAYS);
         hbx_lbls.setAlignment(Pos.CENTER_LEFT);
-        hbx_lbls.setSpacing(5f);
+        hbx_lbls.setSpacing(20f);
 
-        lbl_tile_title.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_tile_coords.setStyle("-fx-font-family:monospace;");
-        lbl_tile_solid.setStyle("-fx-font-family:monospace;");
+        lbl_coordx.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        lbl_coordy.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        lbl_solid.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        lbl_mode.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        
+        lbl_title_v.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        lbl_coordx_v.setStyle("-fx-font-family:monospace;");
+        lbl_coordy_v.setStyle("-fx-font-family:monospace;");
+        lbl_solid_v.setStyle("-fx-font-family:monospace;");
+        lbl_mode_v.setStyle("-fx-font-family:monospace;");
 
-        lbl_tile_title.textProperty().bind(Bindings.format("%-12s", mapPane.tileTitleProperty()));
-        lbl_tile_solid.textProperty().bind(Bindings.concat("Solid: ",
-            mapPane.tileSolidProperty()));            
-        lbl_tile_coords.textProperty().bind(mapPane
-            .tileXProperty().asString("X: %-4d").concat(mapPane
-            .tileYProperty().asString(" Y: %-4d")));
-
+        lbl_title_v.textProperty().bind(Bindings.format("%-13s", mapPane.tileTitleProperty()));
+        lbl_solid_v.textProperty().bind(Bindings.format("%-5s", mapPane.tileSolidProperty()));
+        lbl_mode_v.textProperty().bind(Bindings.format("%-12s", mapPane.selectionModeNameProperty()));
+        lbl_coordx_v.textProperty().bind(mapPane.tileXProperty().asString("%-4d"));
+        lbl_coordy_v.textProperty().bind(mapPane.tileYProperty().asString("%-4d"));
+        
         Button btn_import = new Button("Import");
         Button btn_export = new Button("Export");
         TilePane tlp_btns = new TilePane(btn_import, btn_export);
@@ -48,12 +69,9 @@ public class MapInfoPane extends HBox {
             (MapEditorStage)getScene()
             .getWindow()).show());
 
-        VBox vbx_space = new VBox();
-        HBox.setHgrow(vbx_space, Priority.ALWAYS);
-
         setSpacing(5f);
         setPadding(new Insets(0, 10f, 0, 10f));
-        getChildren().setAll(hbx_lbls, vbx_space,
+        getChildren().setAll(hbx_lbls,
             new Separator(Orientation.VERTICAL), tlp_btns);
     }
 }

@@ -36,11 +36,9 @@ public class ConfirmDialog extends Stage {
             action.run();
             close();
         });
-
+        
         initOwner(parent);
         initModality(Modality.WINDOW_MODAL);
-        setWidth(DIALOG_WIDTH);
-        setHeight(DIALOG_HEIGHT);
         setResizable(false);
         setScene(new Scene(vbx_main));
     }

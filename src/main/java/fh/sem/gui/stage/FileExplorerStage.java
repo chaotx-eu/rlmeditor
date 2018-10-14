@@ -34,6 +34,7 @@ public class FileExplorerStage extends Stage {
 
         TextField txf_pth = new TextField();
         Button btn_cnf = new Button("Save");
+        txf_pth.setPromptText("Enter Filename");
 
         HBox hbx_bot = new HBox(txf_pth, btn_cnf);
         HBox.setHgrow(txf_pth, Priority.ALWAYS);

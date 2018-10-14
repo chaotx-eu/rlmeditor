@@ -1,5 +1,8 @@
 package fh.sem.gui.pane;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fh.sem.gui.view.TileView;
 import fh.sem.logic.Tile;
 import fh.sem.logic.TileSet;
@@ -98,26 +101,36 @@ public class MapTilesPane extends VBox {
         return tileSet;
     }
 
-    private HBox buildTileView(Tile tile, Image sheet, TileSet tileSet) {
-        TileView tv = new TileView(tile, sheet);
-        tv.setOpacity(0.8f);
-        tv.setPreserveRatio(true);
-        tv.fitWidthProperty().bind(widthProperty().multiply(2/3f));
-        tv.setOnMouseClicked(e -> {
-            if(selection != null)
-                selection.setOpacity(0.8f);
-            
-            
+    Map<Tile, TileView> tileViewMap = new HashMap<>();
+    public void select(Tile tile) {
+        if(selection != null)
+            selection.setOpacity(0.8f);
+
+        TileView tv;
+        if(tile == null || (tv = tileViewMap.get(tile)) == null)
+            selection = null;
+        else {
             tv.setOpacity(1.0f);
             selection = tv;
             selectedTileTitle.set(tileSet
                 .getTileTitles()
                 .get(tv.getTile()));
             setSelectionChanged(true);
-        });
+        }
+    }
+
+    private HBox buildTileView(Tile tile, Image sheet, TileSet tileSet) {
+        TileView tv = new TileView(tile, sheet);
+        tileViewMap.put(tile, tv);
+
+        tv.setOpacity(0.8f);
+        tv.setPreserveRatio(true);
+        tv.fitWidthProperty().bind(widthProperty().multiply(2/3f));
+        tv.setOnMouseClicked(e -> select(tile));
 
         HBox hbx = new HBox(tv);
         hbx.setAlignment(Pos.CENTER);
+
         return hbx;
     }
 }

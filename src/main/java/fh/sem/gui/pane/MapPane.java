@@ -112,9 +112,12 @@ public class MapPane extends VBox {
                             int rx = lx == fx ? selectedX : fx;
                             int by = ty == fy ? selectedY : fy;
 
-                            for(int vx; ty <= by; ++ty) for(vx = lx; vx <= rx; ++vx)
+                            for(int vx; ty <= by; ++ty) for(vx = lx; vx <= rx; ++vx) {
                                 tileStacks[ty][vx].setPrimary(tileStacks[ty][vx]
                                     .getSecondary());
+                                tileMap.setTile(vx, ty, tileStacks[ty][vx].getPrimary() == null ?
+                                    null : tileStacks[ty][vx].getPrimary().getTile());
+                            }
 
                             selecting = false;
                         } else tsp.setPrimary(new TileView(
@@ -170,5 +173,4 @@ public class MapPane extends VBox {
     public StringProperty tileTitleProperty() {
         return tileTitle;
     }
-
 }

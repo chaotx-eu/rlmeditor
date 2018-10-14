@@ -2,6 +2,8 @@ package fh.sem.gui.pane;
 
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import fh.sem.gui.stage.MapEditorStage;
+import fh.sem.gui.stage.MapExportStage;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.*;
 
@@ -42,9 +44,9 @@ public class MapInfoPane extends HBox {
             // TODO
         });
 
-        btn_export.setOnAction(e -> {
-            // TODO
-        });
+        btn_export.setOnAction(e -> new MapExportStage(
+            (MapEditorStage)getScene()
+            .getWindow()).show());
 
         VBox vbx_space = new VBox();
         HBox.setHgrow(vbx_space, Priority.ALWAYS);

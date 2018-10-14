@@ -14,6 +14,8 @@ import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
 public class MapEditorStage extends Stage {
+    private TileMap tileMap;
+
     public MapEditorStage(TileMap tileMap) {
         // demo -> TODO read from xml
         TileSet tileSet = new TileSet();
@@ -96,5 +98,10 @@ public class MapEditorStage extends Stage {
         setWidth(960);
         setHeight(720);
         setScene(new Scene(hbx_center));
+        this.tileMap = tileMap;
+    }
+
+    public TileMap getTileMap() {
+        return tileMap;
     }
 }

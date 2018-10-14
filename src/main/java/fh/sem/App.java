@@ -1,5 +1,6 @@
 package fh.sem;
 
+import fh.sem.gui.stage.FileExplorerStage;
 import fh.sem.gui.stage.MapEditorStage;
 import fh.sem.logic.TileMap;
 import javafx.application.Application;
@@ -16,6 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage ps) {
+        FileExplorerStage.initDefault(f -> f.isDirectory() && !f.isHidden());
         new MapEditorStage(new TileMap(
             "file:resources/image/sheet/dungeon0_sheet.png",
             20, 10)).show();

@@ -1,15 +1,16 @@
 package fh.sem.gui.stage;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.File;
 
+import fh.sem.App;
 import fh.sem.gui.stage.dialog.ConfirmDialog;
 import fh.sem.logic.Tile;
 import fh.sem.logic.TileMap;
-import fh.sem.util.MapIO;
+
+import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.text.*;
@@ -82,12 +83,12 @@ public class MapExportStage extends Stage {
                         if(file.exists())
                             new ConfirmDialog(this, "File '" + file.getAbsolutePath()
                                 + "' already exists.\nOverwrite?", () -> {
-                                    MapIO.save(file, mapData);
+                                    App.mapManager.exportMap(file, mapData);
                                     showFeedback("File overwritten: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
                                 }
                             ).show();
                         else {
-                            MapIO.save(file, mapData);
+                            App.mapManager.exportMap(file, mapData);
                             showFeedback("File saved: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
                         }
                     }, f -> f.isDirectory() && ! f.isHidden()

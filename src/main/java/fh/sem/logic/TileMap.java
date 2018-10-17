@@ -27,7 +27,7 @@ public class TileMap implements Serializable {
         return map[y][x];
     }
 
-    public String getSpriteSheet() {
+    public String getSheet() {
         return spriteSheet;
     }
 

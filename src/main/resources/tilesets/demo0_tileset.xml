@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<tileSet title="Demo_0 TileSet">
+	<sheet>demo0_sheet.png</sheet>
+	
+	<category title="Floors">
+		<tile title="Floor0" solid="false" x="0" y="0" w="16" h ="16" />
+		<tile title="Floor1" solid="false" x="16" y="0" w="16" h ="16" />
+		<tile title="Floor2" solid="false" x="32" y="0" w="16" h ="16" />
+	</category>
+	
+	<category title="Walls">
+		<subcategory title="Vertical">
+			<tile title="WallV0" solid="true" x="0" y="16" w="16" h ="16" />
+			<tile title="WallV1" solid="true" x="16" y="16" w="16" h ="16" />
+			<tile title="WallV2" solid="true" x="32" y="16" w="16" h ="16" />
+		</subcategory>
+		
+		<subcategory title="Horizontal">
+			<tile title="WallH0" solid="true" x="0" y="32" w="16" h ="16" />
+			<tile title="WallH1" solid="true" x="16" y="32" w="16" h ="16" />
+			<tile title="WallH2" solid="true" x="32" y="32" w="16" h ="16" />
+		</subcategory>
+		
+		<subcategory title="CrossSect">
+			<tile title="Cross0" solid="true" x="0" y="48" w="16" h ="16" />
+			<tile title="Cross1" solid="true" x="16" y="48" w="16" h ="16" />
+			<tile title="Cross2" solid="true" x="32" y="48" w="16" h ="16" />
+		</subcategory>
+		
+		<subcategory title="TSections">
+			<tile title="TSectTop0" solid="true" x="96" y="0" w="16" h ="16" />
+			<tile title="TSectTop1" solid="true" x="112" y="0" w="16" h ="16" />
+			<tile title="TSectTop2" solid="true" x="128" y="0" w="16" h ="16" />
+			<tile title="TSectLeft0" solid="true" x="96" y="16" w="16" h ="16" />
+			<tile title="TSectLeft1" solid="true" x="112" y="16" w="16" h ="16" />
+			<tile title="TSectLeft2" solid="true" x="128" y="16" w="16" h ="16" />
+			<tile title="TSectBot0" solid="true" x="96" y="32" w="16" h ="16" />
+			<tile title="TSectBot1" solid="true" x="112" y="32" w="16" h ="16" />
+			<tile title="TSectBot2" solid="true" x="128" y="32" w="16" h ="16" />
+			<tile title="TSectRight0" solid="true" x="96" y="48" w="16" h ="16" />
+			<tile title="TSectRight1" solid="true" x="112" y="48" w="16" h ="16" />
+			<tile title="TSectRight2" solid="true" x="128" y="48" w="16" h ="16" />
+		</subcategory>
+		
+		<subcategory title="Corners">
+			<tile title="CornerTL0" solid="true" x="48" y="0" w="16" h ="16" />
+			<tile title="CornerTL1" solid="true" x="64" y="0" w="16" h ="16" />
+			<tile title="CornerTL2" solid="true" x="80" y="0" w="16" h ="16" />
+			<tile title="CornerBL0" solid="true" x="48" y="16" w="16" h ="16" />
+			<tile title="CornerBL1" solid="true" x="64" y="16" w="16" h ="16" />
+			<tile title="CornerBL2" solid="true" x="80" y="16" w="16" h ="16" />
+			<tile title="CornerTR0" solid="true" x="48" y="32" w="16" h ="16" />
+			<tile title="CornerTR1" solid="true" x="64" y="32" w="16" h ="16" />
+			<tile title="CornerTR2" solid="true" x="80" y="32" w="16" h ="16" />
+			<tile title="CornerBR0" solid="true" x="48" y="48" w="16" h ="16" />
+			<tile title="CornerBR1" solid="true" x="64" y="48" w="16" h ="16" />
+			<tile title="CornerBR2" solid="true" x="80" y="48" w="16" h ="16" />
+		</subcategory>
+	</category>
+</tileSet>

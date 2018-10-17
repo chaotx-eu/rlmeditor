@@ -1,78 +1,82 @@
 package fh.sem.gui.stage;
 
+import java.io.File;
+
+import fh.sem.App;
 import fh.sem.gui.pane.MapInfoPane;
 import fh.sem.gui.pane.MapPane;
 import fh.sem.gui.pane.MapTilesPane;
 import fh.sem.gui.pane.TileConfigPane;
-import fh.sem.logic.Tile;
+import fh.sem.gui.stage.dialog.LoadDialog;
+import fh.sem.gui.stage.dialog.NewMapDialog;
+import fh.sem.gui.stage.dialog.SaveDialog;
+import fh.sem.logic.Project;
 import fh.sem.logic.TileMap;
 import fh.sem.logic.TileSet;
+
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 public class MapEditorStage extends Stage {
     private TileMap tileMap;
+    private TileSet tileSet;
+    private Image sheetIMG;
+    private VBox vbx_left = new VBox();
+    private VBox vbx_right = new VBox();
 
-    public MapEditorStage(TileMap tileMap) {
-        // demo -> TODO read from xml
-        TileSet tileSet = new TileSet();
-        tileSet.addTile("title", "Floor", new Tile(0, 0, 16, 16));
-        tileSet.addTile("title", "Floor", new Tile(16, 0, 16, 16));
-        tileSet.addTile("title", "Floor", new Tile(32, 0, 16, 16));
+    public MapEditorStage() {
+        Menu mnu_file = new Menu("File");
+            MenuItem mni_new = new MenuItem("New");
+            MenuItem mni_load = new MenuItem("Load");
+            MenuItem mni_save1 = new MenuItem("Save");
+            MenuItem mni_save2 = new MenuItem("SaveAs");
 
-        tileSet.addTile("title", "Wall", "Vertical", new Tile(0, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Vertical", new Tile(16, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Vertical", new Tile(32, 16, 16, 16, true));
+        mnu_file.getItems().addAll(mni_new, mni_load, mni_save1, mni_save2);
+        MenuBar mnb_main = new MenuBar(mnu_file);
+        
+        mni_new.setOnAction(e -> new NewMapDialog(this, App.APP_TITLE).show());
+        mni_load.setOnAction(e -> new LoadDialog(this, App.APP_TITLE).show());
+        mni_save2.setOnAction(e -> new SaveDialog(this, App.APP_TITLE).show());
+        mni_save1.setOnAction(e -> App.projectManager
+            .save(App.projectManager.getActiveProject()));
 
-        tileSet.addTile("title", "Wall", "Horizontal", new Tile(0, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Horizontal", new Tile(16, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Horizontal", new Tile(32, 32, 16, 16, true));
+        mni_save1.setDisable(true);
+        mni_save2.setDisable(true);
+        App.projectManager.addObserver((pm, arg) -> {
+            Project p = App.projectManager.getActiveProject();
+            mni_save1.setDisable(p == null);
+            mni_save2.setDisable(false);
+            setTitle("RMLEditor - " + (p == null
+                ? "New Project" : p.getTitle()));
+        });
 
-        tileSet.addTile("title", "Wall", "Cross", new Tile(0, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Cross", new Tile(16, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "Cross", new Tile(32, 48, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "CornerTL", new Tile(48, 0, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerTL", new Tile(64, 0, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerTL", new Tile(80, 0, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "CornerBL", new Tile(48, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerBL", new Tile(64, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerBL", new Tile(80, 16, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "CornerTR", new Tile(48, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerTR", new Tile(64, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerTR", new Tile(80, 32, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "CornerBR", new Tile(48, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerBR", new Tile(64, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "CornerBR", new Tile(80, 48, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "TTop", new Tile(96, 0, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TTop", new Tile(112, 0, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TTop", new Tile(128, 0, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "TLeft", new Tile(96, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TLeft", new Tile(112, 16, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TLeft", new Tile(128, 16, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "TBottom", new Tile(96, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TBottom", new Tile(112, 32, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TBottom", new Tile(128, 32, 16, 16, true));
-
-        tileSet.addTile("title", "Wall", "TRight", new Tile(96, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TRight", new Tile(112, 48, 16, 16, true));
-        tileSet.addTile("title", "Wall", "TRight", new Tile(128, 48, 16, 16, true));
-        /////
-
-        VBox vbx_left = new VBox();
-        VBox vbx_right = new VBox();
         HBox hbx_center = new HBox(vbx_left, vbx_right);
+        BorderPane bdp = new BorderPane(hbx_center);
+        bdp.setTop(mnb_main);
 
-        MapTilesPane mtsPane = new MapTilesPane(new Image(tileMap.getSpriteSheet()), tileSet);
+        setMinWidth(960);
+        setMinHeight(720);
+        setTitle("RLMEditor - Welcome");
+        setScene(new Scene(bdp));
+    }
+
+    public void init(TileMap tileMap, TileSet tileSet) {
+        try {
+            sheetIMG = (new File(tileSet.getSheet())).exists()
+                ? new Image("file:" + tileSet.getSheet())
+                : new Image(getClass().getResourceAsStream(tileSet.getSheet()));
+        } catch(NullPointerException | IllegalArgumentException e) {
+            System.out.println("Image File not found");
+            // e.printStackTrace();
+            // sheetIMG = DEFAULT_IMAGE;
+            // TODO showFeedback()
+        }
+
+        MapTilesPane mtsPane = new MapTilesPane(sheetIMG, tileSet);
         TileConfigPane tcfPane = new TileConfigPane(mtsPane);
         MapPane mapPane = new MapPane(tileMap, mtsPane);
         MapInfoPane mfoPane = new MapInfoPane(mapPane);
@@ -92,16 +96,22 @@ public class MapEditorStage extends Stage {
         mfoPane.prefWidthProperty().bind(mapPane.widthProperty());
         mfoPane.prefHeightProperty().bind(heightProperty().multiply(1/12f));
 
-        vbx_left.getChildren().addAll(mtsPane, tcfPane);
-        vbx_right.getChildren().addAll(mapPane, mfoPane);
+        vbx_left.getChildren().setAll(mtsPane, tcfPane);
+        vbx_right.getChildren().setAll(mapPane, mfoPane);
 
-        setWidth(960);
-        setHeight(720);
-        setScene(new Scene(hbx_center));
         this.tileMap = tileMap;
+        this.tileSet = tileSet;
     }
 
     public TileMap getTileMap() {
         return tileMap;
+    }
+
+    public TileSet getTileSet() {
+        return tileSet;
+    }
+
+    public Image getSheetIMG() {
+        return sheetIMG;
     }
 }

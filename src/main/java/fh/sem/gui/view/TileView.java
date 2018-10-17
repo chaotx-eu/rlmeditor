@@ -11,6 +11,8 @@ public class TileView extends ImageView {
 
     public TileView(Tile tile, Image sheet) {
         setImage(sheet);
+        
+        // TODO set default image if sheet was not found
         setViewport(new Rectangle2D(
             tile.getX(), tile.getY(),
             tile.getWidth(), tile.getHeigth()));

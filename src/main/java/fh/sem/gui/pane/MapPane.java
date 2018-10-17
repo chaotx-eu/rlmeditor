@@ -92,7 +92,7 @@ public class MapPane extends VBox {
 
         gdp_out.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
             scr_map.getViewportBounds().getHeight(), scr_map.viewportBoundsProperty()));
-        
+
         MenuItem mni_copy = new MenuItem("Copy");
         Menu mnu_mode = new Menu("Mode");
             RadioMenuItem mni_none = new RadioMenuItem("None");
@@ -171,7 +171,7 @@ public class MapPane extends VBox {
 
     private GridPane initGrid(TileMap tileMap, MapTilesPane tilesPane) {
         tileStacks = new TileStackPane[tileMap.getHeight()][];
-        Image sheet = new Image(tileMap.getSpriteSheet());
+        Image sheet = tilesPane.getSheetIMG();
         GridPane gdp_map = new GridPane();
         Random rng = new Random();
 
@@ -180,8 +180,8 @@ public class MapPane extends VBox {
 
             for(x = 0; x < tileMap.getWidth(); ++x) {
                 TileStackPane tsp = new TileStackPane();
-                
                 tileStacks[y][x] = tsp;
+
                 int r = rng.nextInt(255);
                 int g = rng.nextInt(255);
                 int b = rng.nextInt(255);
@@ -256,6 +256,7 @@ public class MapPane extends VBox {
                         } else if(selectionMode == SelectionMode.Single) {
                             tsp.setPrimary(new TileView(
                                 tilesPane.getSelection().getTile(), sheet));
+                            tileMap.setTile(fx, fy, tsp.getPrimary().getTile());
                         }
                     } else if(e.getButton() == MouseButton.SECONDARY) {
                         if(selecting)
@@ -265,6 +266,9 @@ public class MapPane extends VBox {
                     }
                 });
 
+                if(tileMap.getTile(x, y) != null)
+                    tsp.setPrimary(new TileView(tileMap.getTile(x, y), sheet));
+                    
                 gdp_map.add(tsp, x, y);
             }
         }

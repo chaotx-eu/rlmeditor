@@ -1,6 +1,5 @@
 package fh.sem.gui.stage.dialog;
 
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,11 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.text.*;
 import javafx.geometry.*;
 
-public class ConfirmDialog extends Stage {
+public class ConfirmDialog extends Dialog {
     public static final int DIALOG_WIDTH = 384;
     public static final int DIALOG_HEIGHT = 128;
 
     public ConfirmDialog(Stage parent, String message, Runnable action) {
+        super(parent, "Confirm");
         Text txt_msg = new Text(message);
         Button btn_cnf = new Button("Confirm");
         Button btn_cnc = new Button("Cancel");
@@ -37,9 +37,6 @@ public class ConfirmDialog extends Stage {
             close();
         });
         
-        initOwner(parent);
-        initModality(Modality.WINDOW_MODAL);
-        setResizable(false);
         setScene(new Scene(vbx_main));
     }
 }

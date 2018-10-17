@@ -4,7 +4,7 @@
   <groupId>fh.sem</groupId>
   <artifactId>rl-edit</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <name>rl-edit</name>
   <url>http://maven.apache.org</url>
 
@@ -23,12 +23,24 @@
   </dependencies>
 
   <build>
+    <plugins>
+      <plugin>
+        <groupId>com.zenjava</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>8.8.3</version>
+        <configuration>
+          <mainClass>fh.sem.App</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+
     <resources>
         <resource>
             <directory>src/main/resources</directory>
             <includes>
-                <include>**/*.css</include>
-                <include>**/*.png</include>
+                <include>styles/*.css</include>
+                <include>images/*.png</include>
+                <include>tilesets/*.xml</include>
             </includes>
         </resource>
     </resources>

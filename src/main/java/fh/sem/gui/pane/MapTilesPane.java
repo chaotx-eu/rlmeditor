@@ -14,14 +14,25 @@ import javafx.geometry.*;
 import javafx.beans.property.*;
 
 public class MapTilesPane extends VBox {
-    private TileView selection;
+    private Image sheetIMG;
     private TileSet tileSet;
+    private TileView selection;
+    private TextField txf_search = new TextField();
+    private Map<Tile, TileView> tileViewMap = new HashMap<>();
     private StringProperty selectedTileTitle = new SimpleStringProperty();
     private BooleanProperty selectionChanged = new SimpleBooleanProperty();
+    
+    private Map<String, IntegerProperty> catCountMap = new HashMap<>();
+    private Map<String, Map<String, IntegerProperty>> subCountMap = new HashMap<>();
 
     public MapTilesPane(Image sheet, TileSet tileSet) {
+        this.tileSet = tileSet;
+        this.sheetIMG = sheet;
+        
         VBox vbx_main = new VBox();
         ScrollPane scr_tiles = new ScrollPane(vbx_main);
+        Label lbl_title = new Label(tileSet.getTitle());
+        
         scr_tiles.setFitToWidth(true);
         scr_tiles.setFitToHeight(true);
         
@@ -40,6 +51,16 @@ public class MapTilesPane extends VBox {
             btn_cat.setOnAction(e -> vbx_main.getChildren().set(
                 i, btn_cat.isSelected() ? vbx_cat_con : vbx_cat_non));
 
+            IntegerProperty catCount = new SimpleIntegerProperty();
+            subCountMap.put(category.toLowerCase(), new HashMap<>());
+            catCountMap.put(category.toLowerCase(), catCount);
+            catCount.addListener((p,o, n) -> {
+                if(n.intValue() == 0)
+                    hbx_btn_cat.getChildren().clear();
+                else if(hbx_btn_cat.getChildren().isEmpty())
+                    hbx_btn_cat.getChildren().setAll(btn_cat);
+            });
+
             for(String subCategory : tileSet.getSubCategories().get(category).keySet()) {
                 ToggleButton btn_sub = new ToggleButton(subCategory);
                 HBox hbx_btn_sub = new HBox(btn_sub);
@@ -55,26 +76,42 @@ public class MapTilesPane extends VBox {
                 btn_sub.setOnAction(e -> vbx_cat_con.getChildren().set(
                     j, btn_sub.isSelected() ? vbx_sub_con : vbx_sub_non));
 
-                for(Tile tile : tileSet.getSubCategories().get(category).get(subCategory))
+                IntegerProperty subCount = new SimpleIntegerProperty();
+                subCountMap.get(category.toLowerCase()).put(subCategory.toLowerCase(), subCount);
+                subCount.addListener((p, o, n) -> {
+                    if(n.intValue() == 0)
+                        hbx_btn_sub.getChildren().clear();
+                    else if(hbx_btn_sub.getChildren().isEmpty())
+                        hbx_btn_sub.getChildren().setAll(btn_sub);
+                });
+
+                for(Tile tile : tileSet.getSubCategories().get(category).get(subCategory)) {
                     vbx_sub_con.getChildren().addAll(
-                        buildTileView(tile, sheet, tileSet), new Separator());
+                        buildTileView(tile, tileSet), new Separator());
+
+                    catCount.set(catCount.add(1).get());
+                    subCount.set(subCount.add(1).get());
+                }
 
                 vbx_sub_con.getChildren().addAll(new Separator(), new Separator());
             }
 
-            for(Tile tile : tileSet.getCategories().get(category))
+            for(Tile tile : tileSet.getCategories().get(category)) {
                 vbx_cat_con.getChildren().addAll(
-                    buildTileView(tile, sheet, tileSet), new Separator());
+                    buildTileView(tile, tileSet), new Separator());
+
+                catCount.set(catCount.add(1).get());
+            }
 
             vbx_cat_con.getChildren().add(new Separator());
         }
 
         for(Tile tile : tileSet.getTopLevelTiles())
             vbx_main.getChildren().addAll(
-                buildTileView(tile, sheet, tileSet), new Separator());
+                buildTileView(tile, tileSet), new Separator());
 
-        getChildren().setAll(scr_tiles);
-        this.tileSet = tileSet;
+        txf_search.setPromptText("Search");
+        getChildren().setAll(lbl_title, txf_search, scr_tiles);
     }
 
     public TileView getSelection() {
@@ -101,7 +138,6 @@ public class MapTilesPane extends VBox {
         return tileSet;
     }
 
-    Map<Tile, TileView> tileViewMap = new HashMap<>();
     public void select(Tile tile) {
         if(selection != null)
             selection.setOpacity(0.8f);
@@ -119,18 +155,55 @@ public class MapTilesPane extends VBox {
         }
     }
 
-    private HBox buildTileView(Tile tile, Image sheet, TileSet tileSet) {
-        TileView tv = new TileView(tile, sheet);
+    private HBox buildTileView(Tile tile, TileSet tileSet) {
+        TileView tv = new TileView(tile, sheetIMG);
         tileViewMap.put(tile, tv);
 
         tv.setOpacity(0.8f);
         tv.setPreserveRatio(true);
         tv.fitWidthProperty().bind(widthProperty().multiply(2/3f));
         tv.setOnMouseClicked(e -> select(tile));
+        Tooltip.install(tv, new Tooltip(tileSet.getTileTitles().get(tile)));
 
         HBox hbx = new HBox(tv);
         hbx.setAlignment(Pos.CENTER);
 
+        txf_search.textProperty().addListener((p, o, n) -> {
+            n = n.toLowerCase();
+            String tile_title = tileSet.getTileTitles().get(tile).toLowerCase();
+            String tile_category = tileSet.getCategory(tile) != null
+                ? tileSet.getCategory(tile).toLowerCase() : "";
+            String tile_subcategory = tileSet.getSubCategory(tile) != null
+                ? tileSet.getSubCategory(tile).toLowerCase() :"";
+
+            String[] names = {tile_title, tile_category, tile_subcategory};
+            IntegerProperty catCount = catCountMap.get(tile_category);
+            IntegerProperty subCount = subCountMap.get(tile_category) != null
+                ? subCountMap.get(tile_category).get(tile_subcategory) : null;
+
+            for(String name : names) {
+                if(name.contains(n)) {
+                    if(!hbx.getChildren().contains(tv)) {
+                        hbx.getChildren().setAll(tv);
+                        if(catCount != null) catCount.set(catCount.add(1).get());
+                        if(subCount != null) subCount.set(subCount.add(1).get());
+                    }
+
+                    return;
+                }
+            }
+
+            if(hbx.getChildren().contains(tv)) {
+                hbx.getChildren().clear();
+                if(catCount != null) catCount.set(catCount.subtract(1).get());
+                if(subCount != null) subCount.set(subCount.subtract(1).get());
+            }
+        });
+
         return hbx;
+    }
+
+    public Image getSheetIMG() {
+        return sheetIMG;
     }
 }

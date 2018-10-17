@@ -3,6 +3,7 @@ package fh.sem.gui.pane;
 import javafx.scene.layout.*;
 import fh.sem.gui.view.TileView;
 import javafx.scene.image.*;
+import javafx.geometry.*;
 
 public class TileStackPane extends StackPane {
     private TileView primary;
@@ -11,6 +12,7 @@ public class TileStackPane extends StackPane {
     public TileStackPane(TileView primary, TileView secondary) {
         setPrimary(primary);
         setSecondary(secondary);
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
     }
 
     public TileStackPane(TileView primary) {
@@ -29,7 +31,7 @@ public class TileStackPane extends StackPane {
         this.primary = primary;
         
         if(primary != null) {
-            setupImageView(primary);
+            setupTileView(primary);
             primary.setOpacity(1f);
             getChildren().add(0, primary);
         }
@@ -42,7 +44,7 @@ public class TileStackPane extends StackPane {
         this.secondary = secondary;
 
         if(secondary != null) {
-            setupImageView(secondary);
+            setupTileView(secondary);
             secondary.setOpacity(0.8f);
             getChildren().add(secondary);
         }
@@ -64,10 +66,15 @@ public class TileStackPane extends StackPane {
         setSecondary(null);
     }
 
-    private void setupImageView(ImageView tv) {
+    private void setupTileView(TileView tv) {
         if(tv != null) {
-            tv.fitWidthProperty().bind(widthProperty());
-            tv.fitHeightProperty().bind(heightProperty());
+            // TODO fix bug -> gaps in GridPane (width/heightProperty doesnt work)
+            tv.fitWidthProperty().bind(prefWidthProperty());
+            tv.fitHeightProperty().bind(prefHeightProperty());
+            tv.setPreserveRatio(false);
+            tv.setSmooth(true);
+            tv.minHeight(0f);
+            tv.minWidth(0f);
         }
     }
 }

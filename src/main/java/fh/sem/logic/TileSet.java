@@ -1,11 +1,17 @@
 package fh.sem.logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class TileSet {
+public class TileSet implements Serializable {
+    public static final long serialVersionUID = 0;
+
+    private String sheet = "";
+    private String title = "";
     private Map<Tile, String> tileTitles = new HashMap<>();
     private List<Tile> topLevelTiles = new ArrayList<>();
     private Map<String, List<Tile>> categories = new HashMap<>();
@@ -56,7 +62,52 @@ public class TileSet {
         return categories;
     }
 
+    public String getCategory(Tile tile) {
+        return categories.keySet().stream()
+            .filter(k -> categories.get(k).contains(tile))
+            .findAny().orElse(getCategory(getSubCategory(tile)));
+    }
+
+    public String getCategory(String subCategory) {
+        try {
+            return categories.keySet().stream()
+                .filter(k -> subCategories.get(k)
+                    .keySet().contains(subCategory))
+                .findAny().get();
+        } catch(NoSuchElementException e) { return null; }
+    }
+
+    public String getSubCategory(Tile tile) {
+            for(Map<String, List<Tile>> m : subCategories.values())
+                for(String k : m.keySet())
+                    if(m.get(k).contains(tile))
+                        return k;
+
+            return null;
+    }
+
     public Map<String, Map<String, List<Tile>>> getSubCategories() {
         return subCategories;
+    }
+
+    public void setSheet(String sheet) {
+        this.sheet = sheet;
+    }
+
+    public String getSheet() {
+        return sheet;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return getTitle();
     }
 }

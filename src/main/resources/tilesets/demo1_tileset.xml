@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<tileSet title="Demo_1 TileSet">
+	<sheet>demo1_sheet.png</sheet>
+	
+	<tile x="0" y="0" w="16" h="16" solid="false" title="Floor0" />
+	<tile x="16" y="0" w="16" h="16" solid="false" title="Floor1" />
+	
+	<tile x="0" y="16" w="16" h="16" solid="true" title="WallH0" />
+	<tile x="16" y="16" w="16" h="16" solid="true" title="WallH1" />
+	
+	<tile x="0" y="32" w="16" h="16" solid="true" title="WallV0" />
+	<tile x="16" y="32" w="16" h="16" solid="true" title="WallV1" />
+</tileSet>

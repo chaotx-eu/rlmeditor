@@ -67,10 +67,10 @@ public class MapManager {
         Map<String, TileSet> tilesets = new HashMap<>();
 
         try(InputStream ins = getClass().getResourceAsStream(res_path)) {
-            int c;
             StringBuilder name = new StringBuilder();
+            int c;
 
-            while((c = ins.read()) > 0 ) {
+            while((c = ins.read()) > 0) {
                 if(c == '\n') {
                     TileSet ts = parseXML(getClass().getResourceAsStream(
                             res_path + name.toString()));
@@ -85,7 +85,7 @@ public class MapManager {
 
         File[] files = new File(dir_path).listFiles();
         if(files != null) for(File tsf : files) {
-            TileSet ts = parseXML(tsf);
+            TileSet ts = parseXML(new FileInputStream(tsf));
             tilesets.put(ts.getTitle(), ts);
         }
 
@@ -93,14 +93,6 @@ public class MapManager {
             .stream().sorted()
             .map(k -> tilesets.get(k))
             .collect(Collectors.toList());
-    }
-
-    public TileSet parseXML(File file) throws IOException, SAXException, ParserConfigurationException {
-        TileSet ts = new TileSet();
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser parser = factory.newSAXParser();
-        parser.parse(file, new TileSetHandler(ts));
-        return ts;
     }
 
     public TileSet parseXML(InputStream ins) throws IOException, SAXException, ParserConfigurationException {

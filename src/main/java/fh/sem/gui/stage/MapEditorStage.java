@@ -81,11 +81,6 @@ public class MapEditorStage extends Stage {
         MapPane mapPane = new MapPane(tileMap, mtsPane);
         MapInfoPane mfoPane = new MapInfoPane(mapPane);
 
-        mapPane.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
-        mfoPane.setBackground(new Background(new BackgroundFill(Color.BLUE, null, null)));
-        mtsPane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
-        tcfPane.setBackground(new Background(new BackgroundFill(Color.YELLOW, null, null)));
-
         mtsPane.prefWidthProperty().bind(widthProperty().multiply(1/7f));
         mtsPane.prefHeightProperty().bind(heightProperty().multiply(7/8f));
         tcfPane.prefWidthProperty().bind(mtsPane.widthProperty());

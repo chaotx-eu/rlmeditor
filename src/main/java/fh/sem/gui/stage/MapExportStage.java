@@ -37,7 +37,8 @@ public class MapExportStage extends Stage {
             for(x = 0; x < tileMap.getWidth(); ++x) {
                 if((tile = tileMap.getTile(x, y)) != null)
                     sb.append(tile.getX() + "," + tile.getY() + ","
-                        + tile.getWidth() + "," + tile.getHeigth() + ".");
+                        + tile.getWidth() + "," + tile.getHeigth() + ","
+                        + (tile.isSolid() ? 1 : 0) + ".");
             }
 
             sb.append(";\n");

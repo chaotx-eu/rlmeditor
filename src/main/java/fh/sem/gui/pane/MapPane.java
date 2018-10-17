@@ -173,26 +173,24 @@ public class MapPane extends VBox {
         tileStacks = new TileStackPane[tileMap.getHeight()][];
         Image sheet = tilesPane.getSheetIMG();
         GridPane gdp_map = new GridPane();
-        Random rng = new Random();
 
+        int chb_rid = 0, chb_cid = 1;
         for(int y = 0, x; y < tileMap.getHeight(); ++y) {
             tileStacks[y] = new TileStackPane[tileMap.getWidth()];
 
+            chb_cid = chb_cid == 0 ? 1 : 0;
+            chb_rid = chb_cid;
+
             for(x = 0; x < tileMap.getWidth(); ++x) {
                 TileStackPane tsp = new TileStackPane();
-                tileStacks[y][x] = tsp;
-
-                int r = rng.nextInt(255);
-                int g = rng.nextInt(255);
-                int b = rng.nextInt(255);
-
-                tsp.setBackground(new Background(new BackgroundFill(
-                    Color.rgb(r, g, b), null, null)));
-
+                tsp.setId("check-board-" + (x > 0 ? chb_rid : chb_cid));
                 tsp.prefWidthProperty().bind(tileSize);
                 tsp.prefHeightProperty().bind(tileSize);
+                tileStacks[y][x] = tsp;
 
+                chb_rid = chb_rid == 0 ? 1 : 0;
                 int fx = x, fy = y;
+                
                 tsp.setOnMouseEntered(e -> {
                     if(selectionMode == SelectionMode.Rectangular && selecting) {
                         int lx = fx < selectedX ? fx : selectedX;

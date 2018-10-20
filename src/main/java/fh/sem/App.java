@@ -35,10 +35,6 @@ public class App extends Application {
     @Override
     public void start(Stage ps) {
         FileExplorerStage.initDefault(f -> f.isDirectory() && !f.isHidden());
-        // new MapEditorStage().show();
-
-        MapEditorStage mes = new MapEditorStage();
-        mes.getScene().getStylesheets().add("style.css");
-        mes.show();
+        new MapEditorStage().show();
     }
 }

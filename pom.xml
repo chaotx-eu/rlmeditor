@@ -4,7 +4,7 @@
   <groupId>fh.sem</groupId>
   <artifactId>rl-edit</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.5</version>
+  <version>0.0.6</version>
   <name>rl-edit</name>
   <url>http://maven.apache.org</url>
 
@@ -38,7 +38,7 @@
         <resource>
             <directory>src/main/resources</directory>
             <includes>
-                <include>*.css</include>
+                <include>style/*.css</include>
                 <include>images/*.png</include>
                 <include>tilesets/*.xml</include>
             </includes>

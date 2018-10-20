@@ -14,10 +14,7 @@ public class TileConfigPane extends VBox {
         Label lbl_tile_solid = new Label("Solid:");
         ChoiceBox<String> chb_tile_solid = new ChoiceBox<>();
 
-        lbl_tile_title.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_tile_coords.setStyle("-fx-font-family:monospace;");
-        lbl_tile_size.setStyle("-fx-font-family:monospace;");
-        lbl_tile_solid.setStyle("-fx-font-family:monospace;");
+        lbl_tile_title.setStyle("-fx-font-weight:bold;");
         lbl_tile_solid.setPadding(new Insets(5f, 0f, 0f, 0f));
 
         mapTilesPane.selectionChangedProperty().addListener((p, o, n) -> {

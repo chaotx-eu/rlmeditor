@@ -93,8 +93,8 @@ public class MapPane extends VBox {
         gdp_out.minHeightProperty().bind(Bindings.createDoubleBinding(() ->
             scr_map.getViewportBounds().getHeight(), scr_map.viewportBoundsProperty()));
 
-        MenuItem mni_copy = new MenuItem("Copy");
-        Menu mnu_mode = new Menu("Mode");
+        MenuItem mni_copy = new MenuItem("Select");
+        Menu mnu_mode = new Menu("Draw Mode");
             RadioMenuItem mni_none = new RadioMenuItem("None");
             RadioMenuItem mni_single = new RadioMenuItem("Single");
             RadioMenuItem mni_rectan = new RadioMenuItem("Rectengular");
@@ -173,11 +173,10 @@ public class MapPane extends VBox {
         tileStacks = new TileStackPane[tileMap.getHeight()][];
         Image sheet = tilesPane.getSheetIMG();
         GridPane gdp_map = new GridPane();
-
         int chb_rid = 0, chb_cid = 1;
+        
         for(int y = 0, x; y < tileMap.getHeight(); ++y) {
             tileStacks[y] = new TileStackPane[tileMap.getWidth()];
-
             chb_cid = chb_cid == 0 ? 1 : 0;
             chb_rid = chb_cid;
 

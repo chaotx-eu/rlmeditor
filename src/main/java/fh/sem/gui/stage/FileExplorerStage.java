@@ -2,6 +2,7 @@ package fh.sem.gui.stage;
 
 
 import fh.sem.gui.helper.FileExplorerAction;
+import fh.sem.gui.stage.dialog.Dialog;
 
 import java.io.File;
 import java.util.function.Predicate;
@@ -14,8 +15,9 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
-public class FileExplorerStage extends Stage {
+public class FileExplorerStage extends Dialog {
     public FileExplorerStage(Stage parent, String rootPath, FileExplorerAction action, Predicate<File> filter) {
+        super(parent);
         TreeView<File> trv_files;
 
         if(rootPath.equals(DEFAULT_ROOT)) {
@@ -66,6 +68,7 @@ public class FileExplorerStage extends Stage {
         initOwner(parent);
         initModality(Modality.WINDOW_MODAL);
         setScene(new Scene(vbx_main));
+        vbx_main.setId("dialog-pane");
     }
 
     public FileExplorerStage(Stage parent, String rootPath, FileExplorerAction action) {

@@ -12,7 +12,7 @@ public class MapInfoPane extends HBox {
         Label lbl_coordx = new Label("X:");
         Label lbl_coordy = new Label("Y:");
         Label lbl_solid = new Label("Solid:");
-        Label lbl_mode = new Label("Selection Mode:");
+        Label lbl_mode = new Label("Draw Mode:");
 
         Label lbl_title_v = new Label();
         Label lbl_coordx_v = new Label();
@@ -32,17 +32,12 @@ public class MapInfoPane extends HBox {
         hbx_lbls.setAlignment(Pos.CENTER_LEFT);
         hbx_lbls.setSpacing(20f);
 
-        lbl_coordx.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_coordy.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_solid.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_mode.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
+        lbl_coordx.setStyle("-fx-font-weight:bold");
+        lbl_coordy.setStyle("-fx-font-weight:bold");
+        lbl_solid.setStyle("-fx-font-weight:bold");
+        lbl_mode.setStyle("-fx-font-weight:bold");
+        lbl_title_v.setStyle("-fx-font-weight:bold");
         
-        lbl_title_v.setStyle("-fx-font-family:monospace; -fx-font-weight:bold;");
-        lbl_coordx_v.setStyle("-fx-font-family:monospace;");
-        lbl_coordy_v.setStyle("-fx-font-family:monospace;");
-        lbl_solid_v.setStyle("-fx-font-family:monospace;");
-        lbl_mode_v.setStyle("-fx-font-family:monospace;");
-
         lbl_title_v.textProperty().bind(Bindings.format("%-13s", mapPane.tileTitleProperty()));
         lbl_solid_v.textProperty().bind(Bindings.format("%-5s", mapPane.tileSolidProperty()));
         lbl_mode_v.textProperty().bind(Bindings.format("%-12s", mapPane.selectionModeNameProperty()));

@@ -3,6 +3,9 @@ package fh.sem.gui.stage.dialog;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javafx.collections.*;
+import javafx.collections.ListChangeListener.Change;
+
 public class Dialog extends Stage {
     public Dialog(Stage parent) {
         this(parent, "");
@@ -16,6 +19,11 @@ public class Dialog extends Stage {
         initOwner(parent);
         initModality(Modality.WINDOW_MODAL);
         setResizable(false);
-        setTitle(parent_title + " - " + title);
+        setTitle(parent_title + (!title.isEmpty() ? " - " + title : ""));
+        sceneProperty().addListener((p, o, n) -> {
+            if(o == null && n != null)
+                n.getStylesheets().setAll(parent
+                    .getScene().getStylesheets());
+        });
     }
 }

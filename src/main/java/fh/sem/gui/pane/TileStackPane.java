@@ -1,9 +1,7 @@
 package fh.sem.gui.pane;
 
-import javafx.scene.layout.*;
 import fh.sem.gui.view.TileView;
-import javafx.scene.image.*;
-import javafx.geometry.*;
+import javafx.scene.layout.*;
 
 public class TileStackPane extends StackPane {
     private TileView primary;
@@ -12,7 +10,8 @@ public class TileStackPane extends StackPane {
     public TileStackPane(TileView primary, TileView secondary) {
         setPrimary(primary);
         setSecondary(secondary);
-        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        setMinSize(0, 0);
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
     public TileStackPane(TileView primary) {
@@ -69,12 +68,9 @@ public class TileStackPane extends StackPane {
     private void setupTileView(TileView tv) {
         if(tv != null) {
             // TODO fix bug -> gaps in GridPane (width/heightProperty doesnt work)
-            tv.fitWidthProperty().bind(prefWidthProperty());
-            tv.fitHeightProperty().bind(prefHeightProperty());
+            tv.fitWidthProperty().bind(widthProperty());
+            tv.fitHeightProperty().bind(heightProperty());
             tv.setPreserveRatio(false);
-            tv.setSmooth(true);
-            tv.minHeight(0f);
-            tv.minWidth(0f);
         }
     }
 }

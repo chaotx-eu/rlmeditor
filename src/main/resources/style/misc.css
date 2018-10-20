@@ -1,0 +1,28 @@
+#check-board-0 {
+    -fx-background-color: -fx-color-checkboard-0;
+}
+
+#check-board-1 {
+    -fx-background-color: -fx-color-checkboard-1;
+}
+
+/* Currently unused */
+#stage-bar {
+    -fx-background-color: -fx-color-secondary-1-4;
+}
+
+#stage-bar .label {
+    -fx-text-fill: -fx-color-text-light-2;
+}
+
+#button-minimize {
+
+}
+
+#button-maximize {
+
+}
+
+#button-exit {
+
+}

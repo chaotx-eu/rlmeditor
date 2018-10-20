@@ -37,6 +37,7 @@ public class SaveDialog extends Dialog {
         });
 
         setScene(new Scene(hbx_main));
+        hbx_main.setId("dialog-pane");
     }
 
     private void saveAndClose(String name, MapEditorStage parent) {

@@ -1,0 +1,45 @@
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+MapPane {
+    -fx-background-color: -fx-color-primary-0;
+}
+
+MapPane .scroll-pane {
+    -fx-background-color: -fx-color-secondary-1-2;
+}
+
+MapInfoPane {
+    -fx-background-color: -fx-color-secondary-1-4;
+}
+
+MapTilesPane {
+    -fx-background-color: -fx-color-secondary-1-4;
+}
+
+MapTilesPane {
+    -fx-border-color: -fx-color-secondary-1-3;
+    -fx-border-style: solid;
+    -fx-border-width: 4 0 0 4;
+}
+
+MapTilesPane .scroll-pane {
+    -fx-background-color: -fx-color-secondary-1-4;
+}
+
+TileConfigPane {
+    -fx-background-color: -fx-color-secondary-1-3;
+}
+
+TileStackPane {
+    -fx-background-color: transparent;
+}
+
+#dialog-pane {
+    -fx-background-color: -fx-color-secondary-1-4;
+}
+
+#dialog-pane .scroll-pane {
+    -fx-background-color: -fx-color-secondary-1-2;
+}

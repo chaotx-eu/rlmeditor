@@ -7,6 +7,7 @@ import fh.sem.gui.pane.MapInfoPane;
 import fh.sem.gui.pane.MapPane;
 import fh.sem.gui.pane.MapTilesPane;
 import fh.sem.gui.pane.TileConfigPane;
+import fh.sem.gui.pane.bar.MapEditorStageBar;
 import fh.sem.gui.stage.dialog.LoadDialog;
 import fh.sem.gui.stage.dialog.NewMapDialog;
 import fh.sem.gui.stage.dialog.SaveDialog;
@@ -58,10 +59,14 @@ public class MapEditorStage extends Stage {
         BorderPane bdp = new BorderPane(hbx_center);
         bdp.setTop(mnb_main);
 
+        // unfinished
+        // bdp.setTop(new MapEditorStageBar(this));
+
         setMinWidth(960);
         setMinHeight(720);
         setTitle("RLMEditor - Welcome");
         setScene(new Scene(bdp));
+        getScene().getStylesheets().add("style/style.css");
     }
 
     public void init(TileMap tileMap, TileSet tileSet) {

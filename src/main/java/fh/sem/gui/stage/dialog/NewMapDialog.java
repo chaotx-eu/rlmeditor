@@ -84,6 +84,7 @@ public class NewMapDialog extends Dialog {
         bdp_main.setBottom(hbx_bot);
 
         setScene(new Scene(bdp_main));
+        bdp_main.setId("dialog-pane");
     }
 
     public void setFeedback(String message, long time) {

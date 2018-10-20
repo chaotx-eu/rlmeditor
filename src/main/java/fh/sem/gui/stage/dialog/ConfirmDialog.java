@@ -38,5 +38,6 @@ public class ConfirmDialog extends Dialog {
         });
         
         setScene(new Scene(vbx_main));
+        vbx_main.setId("dialog-pane");
     }
 }

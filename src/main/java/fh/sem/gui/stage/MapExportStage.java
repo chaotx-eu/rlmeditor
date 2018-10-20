@@ -5,6 +5,7 @@ import java.io.File;
 
 import fh.sem.App;
 import fh.sem.gui.stage.dialog.ConfirmDialog;
+import fh.sem.gui.stage.dialog.Dialog;
 import fh.sem.logic.Tile;
 import fh.sem.logic.TileMap;
 
@@ -20,14 +21,13 @@ import javafx.geometry.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-public class MapExportStage extends Stage {
+public class MapExportStage extends Dialog {
     private final Clipboard clipboard = Clipboard.getSystemClipboard();
     private final ClipboardContent content = new ClipboardContent();
     private int sem = 0;
 
     public MapExportStage(MapEditorStage parent) {
-        initOwner(parent);
-        initModality(Modality.WINDOW_MODAL);
+        super(parent);
 
         Tile tile;
         TileMap tileMap = parent.getTileMap();
@@ -108,6 +108,7 @@ public class MapExportStage extends Stage {
         setWidth(parent.getWidth()*0.8);
         setWidth(parent.getHeight()*0.8);
         setScene(new Scene(vbx_main));
+        vbx_main.setId("dialog-pane");
     }
 
     private void showFeedback(String message, Label label, long time) {

@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.geometry.*;
 import javafx.beans.property.*;
 
@@ -35,12 +36,14 @@ public class MapTilesPane extends VBox {
         
         scr_tiles.setFitToWidth(true);
         scr_tiles.setFitToHeight(true);
+        scr_tiles.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        VBox.setVgrow(scr_tiles, Priority.ALWAYS);
         
         for(String category : tileSet.getCategories().keySet()) {
             ToggleButton btn_cat = new ToggleButton(category);
-            HBox hbx_btn_cat = new HBox(btn_cat);
+            VBox hbx_btn_cat = new VBox(btn_cat, new Separator());
             VBox vbx_cat_con = new VBox();
-            VBox vbx_cat_non = new VBox(new Separator());
+            VBox vbx_cat_non = new VBox();
 
             vbx_main.getChildren().add(hbx_btn_cat);
             vbx_main.getChildren().add(vbx_cat_non);
@@ -58,14 +61,14 @@ public class MapTilesPane extends VBox {
                 if(n.intValue() == 0)
                     hbx_btn_cat.getChildren().clear();
                 else if(hbx_btn_cat.getChildren().isEmpty())
-                    hbx_btn_cat.getChildren().setAll(btn_cat);
+                    hbx_btn_cat.getChildren().setAll(btn_cat, new Separator());
             });
 
             for(String subCategory : tileSet.getSubCategories().get(category).keySet()) {
                 ToggleButton btn_sub = new ToggleButton(subCategory);
-                HBox hbx_btn_sub = new HBox(btn_sub);
+                VBox hbx_btn_sub = new VBox(btn_sub, new Separator());
                 VBox vbx_sub_con = new VBox();
-                VBox vbx_sub_non = new VBox(new Separator());
+                VBox vbx_sub_non = new VBox();
 
                 vbx_cat_con.getChildren().add(hbx_btn_sub);
                 vbx_cat_con.getChildren().add(vbx_sub_non);
@@ -82,33 +85,26 @@ public class MapTilesPane extends VBox {
                     if(n.intValue() == 0)
                         hbx_btn_sub.getChildren().clear();
                     else if(hbx_btn_sub.getChildren().isEmpty())
-                        hbx_btn_sub.getChildren().setAll(btn_sub);
+                        hbx_btn_sub.getChildren().setAll(btn_sub, new Separator());
                 });
 
                 for(Tile tile : tileSet.getSubCategories().get(category).get(subCategory)) {
-                    vbx_sub_con.getChildren().addAll(
-                        buildTileView(tile, tileSet), new Separator());
+                    vbx_sub_con.getChildren().add(buildTileView(tile, tileSet));
 
                     catCount.set(catCount.add(1).get());
                     subCount.set(subCount.add(1).get());
                 }
-
-                vbx_sub_con.getChildren().addAll(new Separator(), new Separator());
             }
 
             for(Tile tile : tileSet.getCategories().get(category)) {
-                vbx_cat_con.getChildren().addAll(
-                    buildTileView(tile, tileSet), new Separator());
+                vbx_cat_con.getChildren().add(buildTileView(tile, tileSet));
 
                 catCount.set(catCount.add(1).get());
             }
-
-            vbx_cat_con.getChildren().add(new Separator());
         }
 
         for(Tile tile : tileSet.getTopLevelTiles())
-            vbx_main.getChildren().addAll(
-                buildTileView(tile, tileSet), new Separator());
+            vbx_main.getChildren().add(buildTileView(tile, tileSet));
 
         txf_search.setPromptText("Search");
         getChildren().setAll(lbl_title, txf_search, scr_tiles);
@@ -140,7 +136,7 @@ public class MapTilesPane extends VBox {
 
     public void select(Tile tile) {
         if(selection != null)
-            selection.setOpacity(0.8f);
+            selection.setOpacity(0.6f);
 
         TileView tv;
         if(tile == null || (tv = tileViewMap.get(tile)) == null)
@@ -155,18 +151,18 @@ public class MapTilesPane extends VBox {
         }
     }
 
-    private HBox buildTileView(Tile tile, TileSet tileSet) {
+    private Pane buildTileView(Tile tile, TileSet tileSet) {
         TileView tv = new TileView(tile, sheetIMG);
         tileViewMap.put(tile, tv);
 
-        tv.setOpacity(0.8f);
+        tv.setOpacity(0.6f);
         tv.setPreserveRatio(true);
         tv.fitWidthProperty().bind(widthProperty().multiply(2/3f));
         tv.setOnMouseClicked(e -> select(tile));
         Tooltip.install(tv, new Tooltip(tileSet.getTileTitles().get(tile)));
 
-        HBox hbx = new HBox(tv);
-        hbx.setAlignment(Pos.CENTER);
+        VBox vbx = new VBox(tv, new Separator());
+        vbx.setAlignment(Pos.CENTER);
 
         txf_search.textProperty().addListener((p, o, n) -> {
             n = n.toLowerCase();
@@ -183,8 +179,8 @@ public class MapTilesPane extends VBox {
 
             for(String name : names) {
                 if(name.contains(n)) {
-                    if(!hbx.getChildren().contains(tv)) {
-                        hbx.getChildren().setAll(tv);
+                    if(!vbx.getChildren().contains(tv)) {
+                        vbx.getChildren().setAll(tv, new Separator());
                         if(catCount != null) catCount.set(catCount.add(1).get());
                         if(subCount != null) subCount.set(subCount.add(1).get());
                     }
@@ -193,14 +189,14 @@ public class MapTilesPane extends VBox {
                 }
             }
 
-            if(hbx.getChildren().contains(tv)) {
-                hbx.getChildren().clear();
+            if(vbx.getChildren().contains(tv)) {
+                vbx.getChildren().clear();
                 if(catCount != null) catCount.set(catCount.subtract(1).get());
                 if(subCount != null) subCount.set(subCount.subtract(1).get());
             }
         });
 
-        return hbx;
+        return vbx;
     }
 
     public Image getSheetIMG() {

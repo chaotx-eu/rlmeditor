@@ -24,6 +24,7 @@ public class ConfirmDialog extends Dialog {
         tlp_btns.setHgap(5f);
         tlp_btns.setAlignment(Pos.CENTER_RIGHT);
         txt_msg.setTextAlignment(TextAlignment.CENTER);
+        txt_msg.setId("important-text");
 
         VBox vbx_main = new VBox(txt_msg, tlp_btns);
         vbx_main.setFillWidth(true);

@@ -80,6 +80,7 @@ public class NewMapDialog extends Dialog {
 
         HBox.setHgrow(hbx_spc, Priority.ALWAYS);
         hbx_bot.setPadding(new Insets(10f, 0, 0, 0));
+        hbx_txf.setSpacing(5f);
         bdp_main.setPadding(new Insets(10f));
         bdp_main.setBottom(hbx_bot);
 

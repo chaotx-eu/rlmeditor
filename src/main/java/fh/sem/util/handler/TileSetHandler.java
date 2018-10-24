@@ -29,6 +29,7 @@ public class TileSetHandler extends DefaultHandler {
     }
 
     private String value = "", category, subcategory;
+    private int anonymous_tile = 0;
 
     @Override
     public void startElement(String ns, String localName, String qName, Attributes atts) {
@@ -36,20 +37,32 @@ public class TileSetHandler extends DefaultHandler {
         if(qName.equals("category")) category = atts.getValue("title");
         if(qName.equals("subcategory")) subcategory = atts.getValue("title");
         if(qName.equals("tile")) {
+            Integer x = Integer.parseInt(atts.getValue("x")); // not optional
+            Integer y = Integer.parseInt(atts.getValue("y")); // not optional
+            Integer w = Integer.parseInt(atts.getValue("w")); // not optional
+            Integer h = atts.getValue("h") != null ? Integer.parseInt(atts.getValue("h")) : 0;
+            Integer r = atts.getValue("e") != null ? Integer.parseInt(atts.getValue("r")) : 0;
+            Boolean s = atts.getValue("solid") != null ? Boolean.parseBoolean(atts.getValue(("solid"))) : false;
+            String title;
+            
+            if(atts.getValue("title") == null)
+                title = "Tile_" + anonymous_tile++;
+            else
+                title = atts.getValue("title");
+
             Tile tile = new Tile(
-                Integer.parseInt(atts.getValue("x")),
-                Integer.parseInt(atts.getValue("y")),
-                Integer.parseInt(atts.getValue("w")),
-                Integer.parseInt(atts.getValue("h")),
-                Boolean.parseBoolean(atts.getValue("solid"))
+                x, y, w,
+                h == null ? w : h,
+                r == null ? 0 : r,
+                s == null ? false : s
             );
 
             if(category == null)
-                tileSet.addTile(atts.getValue("title"), tile);
+                tileSet.addTile(title, tile);
             else if(subcategory == null)
-                tileSet.addTile(atts.getValue("title"), category, tile);
+                tileSet.addTile(title, category, tile);
             else
-                tileSet.addTile(atts.getValue("title"), category, subcategory, tile);
+                tileSet.addTile(title, category, subcategory, tile);
         }
     }
 

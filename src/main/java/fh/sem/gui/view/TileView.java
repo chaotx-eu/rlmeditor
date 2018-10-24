@@ -11,11 +11,13 @@ public class TileView extends ImageView {
 
     public TileView(Tile tile, Image sheet) {
         setImage(sheet);
+        setRotate(tile.getRotation());
         
         // TODO set default image if sheet was not found
         setViewport(new Rectangle2D(
             tile.getX(), tile.getY(),
-            tile.getWidth(), tile.getHeigth()));
+            tile.getWidth(), tile.getHeight()));
+
         solid = new SimpleBooleanProperty(tile.isSolid());
         tile.addObserver((o, a) -> solid.set(tile.isSolid()));
         this.tile = tile;

@@ -22,7 +22,7 @@ public class TileConfigPane extends VBox {
                 Tile tile = mapTilesPane.getSelection().getTile();
                 lbl_tile_title.setText(mapTilesPane.selectedTileTitleProperty().get());
                 lbl_tile_coords.setText("X: " + tile.getX() + ", Y: " + tile.getY());
-                lbl_tile_size.setText("W: " + tile.getWidth() + ", H: " + tile.getHeigth());
+                lbl_tile_size.setText("W: " + tile.getWidth() + ", H: " + tile.getHeight());
                 chb_tile_solid.getSelectionModel().select(tile.isSolid() ? 0 : 1);
                 mapTilesPane.setSelectionChanged(false);
             }

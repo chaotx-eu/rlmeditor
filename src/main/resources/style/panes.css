@@ -40,6 +40,10 @@ TileStackPane {
     -fx-background-color: -fx-color-secondary-1-4;
 }
 
+#dialog-pane .label {
+    -fx-text-fill: -fx-color-text-light-2;
+}
+
 #dialog-pane .scroll-pane {
     -fx-background-color: -fx-color-secondary-1-2;
 }

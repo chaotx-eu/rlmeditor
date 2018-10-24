@@ -40,7 +40,7 @@ public class LoadDialog extends Dialog {
         btn_del.setOnAction(e -> {
             Project sel = lsv_proj.getSelectionModel().getSelectedItem();
             new ConfirmDialog(this, "Delete Project: '" + sel.getTitle()
-                + "' ?\nThis can't be undone!", () -> {
+                + "' ?\nThis cannot be undone!", () -> {
 
                 lsv_proj.getItems().remove(sel);
                 App.projectManager.delete(sel);

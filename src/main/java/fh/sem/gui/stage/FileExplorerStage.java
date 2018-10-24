@@ -17,7 +17,7 @@ import javafx.geometry.*;
 
 public class FileExplorerStage extends Dialog {
     public FileExplorerStage(Stage parent, String rootPath, FileExplorerAction action, Predicate<File> filter) {
-        super(parent);
+        super(parent, "FileExplorer");
         TreeView<File> trv_files;
 
         if(rootPath.equals(DEFAULT_ROOT)) {
@@ -47,8 +47,8 @@ public class FileExplorerStage extends Dialog {
         vbx_main.setFillWidth(true);
         vbx_main.setSpacing(5f);
 
-        btn_cnf.disableProperty().bind(
-            trv_files.getSelectionModel()
+        btn_cnf.disableProperty().bind(trv_files
+            .getSelectionModel()
             .selectedItemProperty().isNull()
             .or(txf_pth.textProperty().isEmpty()));
 

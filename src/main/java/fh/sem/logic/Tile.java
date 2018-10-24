@@ -9,19 +9,25 @@ public class Tile extends Observable implements Serializable {
     private int x;
     private int y;
     private int width;
-    private int heigth;
+    private int height;
+    private int rotation;
     private boolean solid;
 
-    public Tile(int x, int y, int width, int heigth, boolean solid) {
+    public Tile(int x, int y, int width, int height, int rotation, boolean solid) {
         this.x = x;
         this.y = y;
         this.width = width;
-        this.heigth = heigth;
+        this.height = height;
+        this.rotation = rotation;
         this.solid = solid;
     }
 
-    public Tile(int x, int y, int width, int heigth) {
-        this(x, y, width, heigth, false);
+    public Tile(int x, int y, int width, int height, boolean solid) {
+        this(x, y, width, height, 0, solid);
+    }
+
+    public Tile(int x, int y, int width, int height) {
+        this(x, y, width, height, false);
     }
 
     public int getX() {
@@ -36,10 +42,14 @@ public class Tile extends Observable implements Serializable {
         return width;
     }
     
-    public int getHeigth() {
-        return heigth;
+    public int getHeight() {
+        return height;
     }
     
+    public int getRotation() {
+        return rotation;
+    }
+
     public boolean isSolid() {
         return solid;
     }

@@ -7,7 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,20 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import fh.sem.App;
+import fh.sem.logic.Tile;
+import fh.sem.logic.TileMap;
 import fh.sem.logic.TileSet;
 import fh.sem.util.handler.TileSetHandler;
 
 public class MapManager {
+    public static final String MAP_XML_HEAD = (
+          "<?xml version='1.0' encoding='utf-8'?>\n"
+        + "<XnaContent xmlns:ns='Microsoft.Xna.Framework'>\n"
+        + "\t<Asset Type='TileMap'>\n");
+
+    public static final String MAP_XML_FOOD = (
+        "\t</Asset>\n</XnaContent>\n");
+
     private static MapManager singleton;
     private MapManager() {};
 
@@ -32,6 +43,40 @@ public class MapManager {
             singleton = new MapManager();
 
         return singleton;
+    }
+
+    public String parseMap(TileMap map, String title) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(MAP_XML_HEAD);
+        sb.append("\t\t<Title>" + title + "</Title>\n");
+        sb.append("\t\t<Tiles>\n");
+
+        for(int y = 0, x; y < map.getHeight(); ++y) {
+            for(x = 0; x < map.getWidth(); ++x) {
+                Tile tile = map.getTile(x, y);
+
+                if(tile != null) {
+                    sb.append("\t\t\t<Tile>\n");
+                    sb.append("\t\t\t\t<SpriteSheet>"
+                        + map.getSheet() + "</SpriteSheet>\n");
+                    sb.append("\t\t\t\t<SpriteRectangle>"
+                        + tile.getX() + " " + tile.getY() + " "
+                        + tile.getWidth() + " "
+                        + tile.getHeight() + "</SpriteRectangle>\n");
+                    sb.append("\t\t\t\t<Rotation>"
+                        + tile.getRotation() + "</Rotation>\n");
+                    sb.append("\t\t\t\t<Position>"
+                        + x + " " + y
+                        + "</Position>\n");
+                    sb.append("\t\t\t\t<Solid>" + tile.isSolid() + "</Solid>\n");
+                    sb.append("\t\t\t</Tile>\n");
+                }
+            }
+        }
+        
+        sb.append("\t\t</Tiles>\n");
+        sb.append(MAP_XML_FOOD);
+        return sb.toString();
     }
 
     public void exportMap(File file, String mapData) {

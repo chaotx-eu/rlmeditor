@@ -27,25 +27,12 @@ public class MapExportStage extends Dialog {
     private int sem = 0;
 
     public MapExportStage(MapEditorStage parent) {
-        super(parent);
-
-        Tile tile;
-        TileMap tileMap = parent.getTileMap();
-        StringBuilder sb = new StringBuilder();
-
-        for(int y = 0, x; y < tileMap.getHeight(); ++y) {
-            for(x = 0; x < tileMap.getWidth(); ++x) {
-                if((tile = tileMap.getTile(x, y)) != null)
-                    sb.append(tile.getX() + "," + tile.getY() + ","
-                        + tile.getWidth() + "," + tile.getHeigth() + ","
-                        + (tile.isSolid() ? 1 : 0) + ".");
-            }
-
-            sb.append(";\n");
-        }
-
+        super(parent, "Export Map");
+        
         Label lbl_fed = new Label();
-        Text txt_map = new Text(sb.toString());
+        Text txt_map = new Text(App.mapManager.parseMap(
+            parent.getTileMap(), parent.getTileSet().getTitle()));
+
         Button btn_save = new Button("Save to File");
         Button btn_copy = new Button("Copy to Clipboard");
         TilePane tlp_btns = new TilePane(btn_save, btn_copy);
@@ -79,18 +66,18 @@ public class MapExportStage extends Dialog {
             else {
                 new FileExplorerStage(this, System.getProperty("user.home")
                     + File.separator + "documents", file -> {
-                        String mapData = txt_map.getText().replace("\n", "");
-
                         if(file.exists())
                             new ConfirmDialog(this, "File '" + file.getAbsolutePath()
                                 + "' already exists.\nOverwrite?", () -> {
-                                    App.mapManager.exportMap(file, mapData);
-                                    showFeedback("File overwritten: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
+                                    App.mapManager.exportMap(file, txt_map.getText());
+                                    // showFeedback("File overwritten: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
+                                    close();
                                 }
                             ).show();
                         else {
-                            App.mapManager.exportMap(file, mapData);
-                            showFeedback("File saved: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
+                            App.mapManager.exportMap(file, txt_map.getText());
+                            // showFeedback("File saved: '" + file.getAbsolutePath() + "'", lbl_fed, 10000);
+                            close();
                         }
                     }, f -> f.isDirectory() && ! f.isHidden()
                 ).show();
@@ -103,10 +90,6 @@ public class MapExportStage extends Dialog {
             showFeedback("Map copied to Clipboad", lbl_fed, 2500);
         });
 
-        setMinWidth(512);
-        setMinHeight(384);
-        setWidth(parent.getWidth()*0.8);
-        setWidth(parent.getHeight()*0.8);
         setScene(new Scene(vbx_main));
         vbx_main.setId("dialog-pane");
     }

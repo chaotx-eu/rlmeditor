@@ -6,6 +6,11 @@
     -fx-background-color: -fx-color-checkboard-1;
 }
 
+#important-text {
+    -fx-fill: -fx-color-text-light-1;
+    -fx-font-weight: bold;
+}
+
 /* Currently unused */
 #stage-bar {
     -fx-background-color: -fx-color-secondary-1-4;

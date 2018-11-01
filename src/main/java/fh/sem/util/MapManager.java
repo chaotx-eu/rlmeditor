@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,7 @@ public class MapManager {
         + "<XnaContent xmlns:ns='Microsoft.Xna.Framework'>\n"
         + "\t<Asset Type='TileMap'>\n");
 
-    public static final String MAP_XML_FOOD = (
+    public static final String MAP_XML_FOOT = (
         "\t</Asset>\n</XnaContent>\n");
 
     private static MapManager singleton;
@@ -51,6 +49,11 @@ public class MapManager {
         sb.append("\t\t<Title>" + title + "</Title>\n");
         sb.append("\t\t<Tiles>\n");
 
+        // TODO better support for different image files
+        String sheet = (map.getSheet().endsWith(".png")
+            ? map.getSheet().substring(0, map.getSheet().length()-4)
+            : map.getSheet()).replaceFirst("/", "");
+
         for(int y = 0, x; y < map.getHeight(); ++y) {
             for(x = 0; x < map.getWidth(); ++x) {
                 Tile tile = map.getTile(x, y);
@@ -58,7 +61,7 @@ public class MapManager {
                 if(tile != null) {
                     sb.append("\t\t\t<Tile>\n");
                     sb.append("\t\t\t\t<SpriteSheet>"
-                        + map.getSheet() + "</SpriteSheet>\n");
+                        + sheet + "</SpriteSheet>\n");
                     sb.append("\t\t\t\t<SpriteRectangle>"
                         + tile.getX() + " " + tile.getY() + " "
                         + tile.getWidth() + " "
@@ -75,7 +78,7 @@ public class MapManager {
         }
         
         sb.append("\t\t</Tiles>\n");
-        sb.append(MAP_XML_FOOD);
+        sb.append(MAP_XML_FOOT);
         return sb.toString();
     }
 

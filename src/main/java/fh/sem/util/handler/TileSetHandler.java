@@ -70,7 +70,7 @@ public class TileSetHandler extends DefaultHandler {
     public void endElement(String ns, String localName, String qName) throws SAXException {
         if(qName.equals("sheet")) {
             String img = value.trim();
-            String intern = "/images/" + img;
+            String intern = "/images/maps/" + img;
             String extern = App.IMG_DIR + File.separator + img;
 
             tileSet.setSheet(!(new File(extern).exists())

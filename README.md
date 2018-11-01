@@ -25,7 +25,7 @@ cd rlmeditor
 ## build with maven jfx plugin
 mvn jfx:jar
 ```
-The executable jar will then be located in `rlmeditor/target/jfx/rlmeditor-x.y.z.jar`.
+The executable jar will then be located in `rlmeditor/target/jfx/app/rlmeditor-x.y.z-jfx.jar`.
 
 ## Getting Started
 
@@ -63,6 +63,9 @@ file in a format which is currently only supported by *Monogame*.
 In your game project run the Monogame PipelineTool `./Content/Content.mgcb` and add the
 exported xml file as item.
 
+The SpriteSheet must also be added with the same same folder structure it was located
+in the `.RLMEditor` folder, e.g. `Content/images/maps/some_sprite_sheet.png`.
+
 You can create a TileMap-Object using the *ContentManager* e.g:
 `TileMap myTileMap = Content.Load<TileMap>("myTileMapFile");` 
 
@@ -82,7 +85,7 @@ The xml-syntax is as follows:
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <tileSet title>
-	<sheet>some_tile_sheet</sheet>
+	<sheet>some_tile_sheet.png</sheet>
 
 	[<tile x y w[ h r solid title] />]*
 	[

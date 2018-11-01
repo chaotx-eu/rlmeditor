@@ -1,6 +1,6 @@
 # RLMapEditor
 
-Editor for creating 2D TileMaps (currently only supporting [Besmash](github.com/chaotx-eu/besmash))
+Editor for creating 2D TileMaps (currently only supporting [Besmash](https://github.com/chaotx-eu/besmash))
 
 ## Important
 The project is still in developement and may (will) contain bugs. Also any functionality
@@ -11,10 +11,10 @@ what I can do but I cannot promise anything).
 ## Installing
 
 ### Download
-You can grab an already compiled version [here](google.com).
+You can grab an already compiled version [here](https://github.com/chaotx-eu/rlmeditor/releases).
 
 ### Deployement
-Alternatively you can build the project by yourself, which requires [maven](maven.com).
+Alternatively you can build the project by yourself, which requires [maven](https://maven.apache.org/).
 ```
 ## once maven is installed clone the project
 git clone https://github.com/chaotx-eu/rlmeditor.git
@@ -79,7 +79,7 @@ As mentioned the TileSheet has to be in `.png` format. It needs to be placed in
 the `.RLMEditor/images` folder.
 
 ### TileSet XML
-The tileset `.xml` file has to be located in the `.RLMEditio/tilesets` folder.
+The tileset `.xml` file has to be located in the `.RLMEditor/tilesets` folder.
 
 The xml-syntax is as follows:
 ```xml

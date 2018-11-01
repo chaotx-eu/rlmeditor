@@ -67,7 +67,9 @@ The SpriteSheet must also be added with the same same folder structure it was lo
 in the `.RLMEditor` folder, e.g. `Content/images/maps/some_sprite_sheet.png`.
 
 You can create a TileMap-Object using the *ContentManager* e.g:
-`TileMap myTileMap = Content.Load<TileMap>("myTileMapFile");` 
+```
+TileMap myTileMap = Content.Load<TileMap>("myTileMapFile");
+```
 
 ## Custom Content
 
@@ -76,7 +78,7 @@ in `.png` format and do some xml writing to define the single tiles.
 
 ### TileSheet
 As mentioned the TileSheet has to be in `.png` format. It needs to be placed in
-the `.RLMEditor/images` folder.
+the `.RLMEditor/images/maps` folder.
 
 ### TileSet XML
 The tileset `.xml` file has to be located in the `.RLMEditor/tilesets` folder.

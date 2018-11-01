@@ -110,28 +110,14 @@ public class MapManager {
     }
 
     public List<TileSet> loadTileSets() throws IOException, SAXException, ParserConfigurationException {
-        String dir_path = App.TLS_DIR;
-        String res_path = "/tilesets/";
         Map<String, TileSet> tilesets = new HashMap<>();
 
-        try(InputStream ins = getClass().getResourceAsStream(res_path)) {
-            StringBuilder name = new StringBuilder();
-            int c;
-
-            while((c = ins.read()) > 0) {
-                if(c == '\n') {
-                    TileSet ts = parseXML(getClass().getResourceAsStream(
-                            res_path + name.toString()));
-
-                    tilesets.put(ts.getTitle(), ts);
-                    name = new StringBuilder();
-                } else name.append((char)c);
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
+        for(String demo_ts : App.DEMO_TILESETS) {
+            TileSet ts = parseXML(getClass().getResourceAsStream(demo_ts));
+            tilesets.put(ts.getTitle(), ts);
         }
 
-        File[] files = new File(dir_path).listFiles();
+        File[] files = new File(App.TLS_DIR).listFiles();
         if(files != null) for(File tsf : files) {
             TileSet ts = parseXML(new FileInputStream(tsf));
             tilesets.put(ts.getTitle(), ts);

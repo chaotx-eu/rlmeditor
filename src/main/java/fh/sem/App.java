@@ -22,6 +22,11 @@ public class App extends Application {
     public static final String IMG_DIR = (APP_DIR + File.separator + "images" + File.separator + "maps");
     public static final String TLS_DIR = (APP_DIR + File.separator + "tilesets");
     public static final String PROJ_DIR = (APP_DIR + File.separator + "projects");
+
+    public static final String[] DEMO_TILESETS = {
+        "/tilesets/demo0_tileset.xml",
+        "/tilesets/demo1_tileset.xml"
+    };
     
     public static void main(String[]args) {
         new File(APP_DIR).mkdirs();

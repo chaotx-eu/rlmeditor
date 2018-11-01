@@ -4,7 +4,7 @@
   <groupId>fh.sem</groupId>
   <artifactId>rl-edit</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.8</version>
+  <version>0.0.9</version>
   <name>rl-edit</name>
   <url>http://maven.apache.org</url>
 

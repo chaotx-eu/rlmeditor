@@ -12,7 +12,6 @@ public class TileSet implements Serializable {
 
     private String sheet = "";
     private String title = "";
-    private Map<Tile, String> tileTitles = new HashMap<>();
     private List<Tile> topLevelTiles = new ArrayList<>();
     private Map<String, List<Tile>> categories = new HashMap<>();
     private Map<String, Map<String, List<Tile>>> subCategories = new HashMap<>();
@@ -28,7 +27,6 @@ public class TileSet implements Serializable {
             subCategories.get(category).put(subCategory, new ArrayList<>());
 
         subCategories.get(category).get(subCategory).add(tile);
-        tileTitles.put(tile, title);
     }
 
     public void addTile(String title, String category, Tile tile) {
@@ -38,20 +36,14 @@ public class TileSet implements Serializable {
         }
 
         categories.get(category).add(tile);
-        tileTitles.put(tile, title);
     }
 
     public void addTile(String title, Tile tile) {
         topLevelTiles.add(tile);
-        tileTitles.put(tile, title);
     }
 
     public void addTile(Tile tile) {
         addTile("Tile_" + topLevelTiles.size(), tile);
-    }
-
-    public Map<Tile, String> getTileTitles() {
-        return tileTitles;
     }
 
     public List<Tile> getTopLevelTiles() {

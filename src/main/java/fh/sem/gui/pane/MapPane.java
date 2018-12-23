@@ -2,7 +2,6 @@ package fh.sem.gui.pane;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import fh.sem.gui.view.TileView;
 import fh.sem.logic.Tile;
@@ -12,7 +11,6 @@ import javafx.scene.image.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.*;
@@ -36,7 +34,7 @@ public class MapPane extends VBox {
 
     private static final double MIN_ZOOM = 0.3f;
     private static final double MAX_ZOOM = 3f;
-    private static final double MIN_TILE_SIZE = 16f;
+    private static final double MIN_TILE_SIZE = 2f;
 
     public MapPane(TileMap tileMap, MapTilesPane tilesPane) {
         tileX = new SimpleIntegerProperty();
@@ -207,16 +205,13 @@ public class MapPane extends VBox {
                         }
                     }
 
-                    Tile tile = tileStacks[fy][fx].getPrimary() != null
-                        ? tileStacks[fy][fx].getPrimary().getTile() : null;
-
+                    Tile tile = tileMap.getTile(fx, fy);
                     tileX.set(fx);
                     tileY.set(fy);
 
                     if(tile != null) {
                         tileSolid.set(tile.isSolid());
-                        tileTitle.set(tilesPane.getTileSet()
-                            .getTileTitles().get(tile));
+                        tileTitle.set(tile.getTitle());
                     } else {
                         tileSolid.set(true);
                         tileTitle.set("~");
@@ -237,7 +232,7 @@ public class MapPane extends VBox {
                                     tileStacks[ty][vx].setPrimary(tileStacks[ty][vx]
                                         .getSecondary());
                                     tileMap.setTile(vx, ty, tileStacks[ty][vx].getPrimary() == null ?
-                                        null : tileStacks[ty][vx].getPrimary().getTile());
+                                        null : tileStacks[ty][vx].getPrimary().getTile().copy());
                                 }
 
                                 selecting = false;
@@ -253,7 +248,7 @@ public class MapPane extends VBox {
                         } else if(selectionMode == SelectionMode.Single) {
                             tsp.setPrimary(new TileView(
                                 tilesPane.getSelection().getTile(), sheet));
-                            tileMap.setTile(fx, fy, tsp.getPrimary().getTile());
+                            tileMap.setTile(fx, fy, tsp.getPrimary().getTile().copy());
                         }
                     } else if(e.getButton() == MouseButton.SECONDARY) {
                         if(selecting)

@@ -15,6 +15,8 @@ import javafx.geometry.*;
 import javafx.beans.property.*;
 
 public class MapTilesPane extends VBox {
+    public static final float TILE_OPACITY = 0.3f;
+
     private Image sheetIMG;
     private TileSet tileSet;
     private TileView selection;
@@ -135,18 +137,20 @@ public class MapTilesPane extends VBox {
     }
 
     public void select(Tile tile) {
-        if(selection != null)
-            selection.setOpacity(0.6f);
+        if(selection != null) {
+            selection.setOpacity(TILE_OPACITY);
+            selection.setScale(1);
+
+        }
 
         TileView tv;
         if(tile == null || (tv = tileViewMap.get(tile)) == null)
             selection = null;
         else {
+            tv.setScale(1.1f);
             tv.setOpacity(1.0f);
             selection = tv;
-            selectedTileTitle.set(tileSet
-                .getTileTitles()
-                .get(tv.getTile()));
+            selectedTileTitle.set(tile.getTitle());
             setSelectionChanged(true);
         }
     }
@@ -155,18 +159,20 @@ public class MapTilesPane extends VBox {
         TileView tv = new TileView(tile, sheetIMG);
         tileViewMap.put(tile, tv);
 
-        tv.setOpacity(0.6f);
+        tv.setOpacity(TILE_OPACITY);
         tv.setPreserveRatio(true);
-        tv.fitWidthProperty().bind(widthProperty().multiply(2/3f));
+        tv.fitWidthProperty().bind(
+            widthProperty().multiply(2/3f)
+            .multiply(tv.scaleProperty()));
         tv.setOnMouseClicked(e -> select(tile));
-        Tooltip.install(tv, new Tooltip(tileSet.getTileTitles().get(tile)));
+        Tooltip.install(tv, new Tooltip(tile.getTitle()));
 
         VBox vbx = new VBox(tv, new Separator());
         vbx.setAlignment(Pos.CENTER);
 
         txf_search.textProperty().addListener((p, o, n) -> {
             n = n.toLowerCase();
-            String tile_title = tileSet.getTileTitles().get(tile).toLowerCase();
+            String tile_title = tile.getTitle().toLowerCase();
             String tile_category = tileSet.getCategory(tile) != null
                 ? tileSet.getCategory(tile).toLowerCase() : "";
             String tile_subcategory = tileSet.getSubCategory(tile) != null

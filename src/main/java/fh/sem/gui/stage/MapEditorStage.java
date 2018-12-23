@@ -7,7 +7,6 @@ import fh.sem.gui.pane.MapInfoPane;
 import fh.sem.gui.pane.MapPane;
 import fh.sem.gui.pane.MapTilesPane;
 import fh.sem.gui.pane.TileConfigPane;
-import fh.sem.gui.pane.bar.MapEditorStageBar;
 import fh.sem.gui.stage.dialog.LoadDialog;
 import fh.sem.gui.stage.dialog.NewMapDialog;
 import fh.sem.gui.stage.dialog.SaveDialog;
@@ -20,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.image.*;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 
 public class MapEditorStage extends Stage {
     private TileMap tileMap;
@@ -59,7 +57,7 @@ public class MapEditorStage extends Stage {
         BorderPane bdp = new BorderPane(hbx_center);
         bdp.setTop(mnb_main);
 
-        // unfinished
+        // TODO
         // bdp.setTop(new MapEditorStageBar(this));
 
         setMinWidth(960);

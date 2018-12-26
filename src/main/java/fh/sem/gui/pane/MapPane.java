@@ -7,7 +7,6 @@ import fh.sem.gui.view.TileView;
 import fh.sem.logic.Tile;
 import fh.sem.logic.TileMap;
 
-import javafx.scene.image.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
@@ -169,7 +168,6 @@ public class MapPane extends VBox {
 
     private GridPane initGrid(TileMap tileMap, MapTilesPane tilesPane) {
         tileStacks = new TileStackPane[tileMap.getHeight()][];
-        Image sheet = tilesPane.getSheetIMG();
         GridPane gdp_map = new GridPane();
         int chb_rid = 0, chb_cid = 1;
         
@@ -198,8 +196,10 @@ public class MapPane extends VBox {
                         for(int sy = 0, sx; sy < tileMap.getHeight(); ++sy) {
                             for(sx = 0; sx < tileMap.getWidth(); ++sx) {
                                 if(sx >= lx && sx <= rx && sy >= ty && sy <= by) {
-                                    tileStacks[sy][sx].setSecondary(new TileView(
-                                        tilesPane.getSelection().getTile(), sheet));
+                                    tileStacks[sy][sx].setSecondary(
+                                        new TileView(tilesPane
+                                            .getSelection()
+                                            .getTile()));
                                 } else tileStacks[sy][sx].removeSecondary();
                             }
                         }
@@ -229,8 +229,10 @@ public class MapPane extends VBox {
                                 int by = ty == fy ? selectedY : fy;
 
                                 for(int vx; ty <= by; ++ty) for(vx = lx; vx <= rx; ++vx) {
-                                    tileStacks[ty][vx].setPrimary(tileStacks[ty][vx]
+                                    tileStacks[ty][vx]
+                                        .setPrimary(tileStacks[ty][vx]
                                         .getSecondary());
+
                                     tileMap.setTile(vx, ty, tileStacks[ty][vx].getPrimary() == null ?
                                         null : tileStacks[ty][vx].getPrimary().getTile().copy());
                                 }
@@ -241,13 +243,14 @@ public class MapPane extends VBox {
                                 selectedY = fy;
                                 selecting = true;
 
-                                if(tilesPane.getSelection() != null)
-                                    tsp.setSecondary(new TileView(
-                                        tilesPane.getSelection().getTile(), sheet));
+                                if(tilesPane.getSelection() != null) {
+                                    tsp.setSecondary(new TileView(tilesPane
+                                        .getSelection()
+                                        .getTile()));
+                                }
                             }
                         } else if(selectionMode == SelectionMode.Single) {
-                            tsp.setPrimary(new TileView(
-                                tilesPane.getSelection().getTile(), sheet));
+                            tsp.setPrimary(new TileView(tilesPane.getSelection().getTile()));
                             tileMap.setTile(fx, fy, tsp.getPrimary().getTile().copy());
                         }
                     } else if(e.getButton() == MouseButton.SECONDARY) {
@@ -259,7 +262,7 @@ public class MapPane extends VBox {
                 });
 
                 if(tileMap.getTile(x, y) != null)
-                    tsp.setPrimary(new TileView(tileMap.getTile(x, y), sheet));
+                    tsp.setPrimary(new TileView(tileMap.getTile(x, y)));
                     
                 gdp_map.add(tsp, x, y);
             }

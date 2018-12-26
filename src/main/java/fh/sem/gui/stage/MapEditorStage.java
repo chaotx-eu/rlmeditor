@@ -1,7 +1,5 @@
 package fh.sem.gui.stage;
 
-import java.io.File;
-
 import fh.sem.App;
 import fh.sem.gui.pane.MapInfoPane;
 import fh.sem.gui.pane.MapPane;
@@ -17,13 +15,11 @@ import fh.sem.logic.TileSet;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
-import javafx.scene.image.*;
 import javafx.scene.control.*;
 
 public class MapEditorStage extends Stage {
     private TileMap tileMap;
     private TileSet tileSet;
-    private Image sheetIMG;
     private VBox vbx_left = new VBox();
     private VBox vbx_right = new VBox();
 
@@ -68,18 +64,7 @@ public class MapEditorStage extends Stage {
     }
 
     public void init(TileMap tileMap, TileSet tileSet) {
-        try {
-            sheetIMG = (new File(tileSet.getSheet())).exists()
-                ? new Image("file:" + tileSet.getSheet())
-                : new Image(getClass().getResourceAsStream(tileSet.getSheet()));
-        } catch(NullPointerException | IllegalArgumentException e) {
-            System.out.println("Image File not found");
-            // e.printStackTrace();
-            // sheetIMG = DEFAULT_IMAGE;
-            // TODO showFeedback()
-        }
-
-        MapTilesPane mtsPane = new MapTilesPane(sheetIMG, tileSet);
+        MapTilesPane mtsPane = new MapTilesPane(tileSet);
         TileConfigPane tcfPane = new TileConfigPane(mtsPane);
         MapPane mapPane = new MapPane(tileMap, mtsPane);
         MapInfoPane mfoPane = new MapInfoPane(mapPane);
@@ -107,9 +92,5 @@ public class MapEditorStage extends Stage {
 
     public TileSet getTileSet() {
         return tileSet;
-    }
-
-    public Image getSheetIMG() {
-        return sheetIMG;
     }
 }

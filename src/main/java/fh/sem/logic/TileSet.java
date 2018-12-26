@@ -7,43 +7,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import fh.sem.App;
+import javafx.scene.image.Image;
+
 public class TileSet implements Serializable {
     public static final long serialVersionUID = 0;
 
-    private String sheet = "";
     private String title = "";
     private List<Tile> topLevelTiles = new ArrayList<>();
     private Map<String, List<Tile>> categories = new HashMap<>();
     private Map<String, Map<String, List<Tile>>> subCategories = new HashMap<>();
+    private Map<String, Image> imageMap = new HashMap<>();
 
-    public void addTile(String title, String category, String subCategory, Tile tile) {
+    public void addTile(Tile tile, String category, String subCategory) {
         if(!categories.containsKey(category))
-            categories.put(category, new ArrayList<>());
-
+        categories.put(category, new ArrayList<>());
+        
         if(!subCategories.containsKey(category))
-            subCategories.put(category, new HashMap<>());
-
+        subCategories.put(category, new HashMap<>());
+        
         if(!subCategories.get(category).containsKey(subCategory))
-            subCategories.get(category).put(subCategory, new ArrayList<>());
-
+        subCategories.get(category).put(subCategory, new ArrayList<>());
+        
         subCategories.get(category).get(subCategory).add(tile);
+        initTile(tile);
     }
 
-    public void addTile(String title, String category, Tile tile) {
+    public void addTile(Tile tile, String category) {
         if(!categories.containsKey(category)) {
             categories.put(category, new ArrayList<>());
             subCategories.put(category, new HashMap<>());
         }
 
         categories.get(category).add(tile);
-    }
-
-    public void addTile(String title, Tile tile) {
-        topLevelTiles.add(tile);
+        initTile(tile);
     }
 
     public void addTile(Tile tile) {
-        addTile("Tile_" + topLevelTiles.size(), tile);
+        topLevelTiles.add(tile);
+        initTile(tile);
     }
 
     public List<Tile> getTopLevelTiles() {
@@ -82,14 +84,6 @@ public class TileSet implements Serializable {
         return subCategories;
     }
 
-    public void setSheet(String sheet) {
-        this.sheet = sheet;
-    }
-
-    public String getSheet() {
-        return sheet;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -98,8 +92,21 @@ public class TileSet implements Serializable {
         return title;
     }
 
+    public Image getImage(String path) {
+        return imageMap.get(path);
+    }
+
     @Override
     public String toString() {
         return getTitle();
+    }
+
+    protected void initTile(Tile tile) {
+        tile.setTileSet(this);
+        if(!imageMap.containsKey(tile.getSheet())) {
+            imageMap.put(tile.getSheet(), new Image(App
+                .resourceManager
+                .get(tile.getSheet())));
+        }
     }
 }

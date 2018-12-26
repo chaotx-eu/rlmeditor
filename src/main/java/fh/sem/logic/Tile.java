@@ -1,5 +1,7 @@
 package fh.sem.logic;
 
+import javafx.scene.image.Image;
+
 import java.io.Serializable;
 import java.util.Observable;
 
@@ -12,27 +14,39 @@ public class Tile extends Observable implements Serializable {
     private int height;
     private int rotation;
     private boolean solid;
-    private String title;
+    private String title, sheet;
+    private TileSet tileSet;
 
-    public Tile(int x, int y, int width, int height, int rotation, boolean solid) {
+    public Tile(String sheet, String title, int x, int y,
+    int width, int height, int rotation, boolean solid) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.rotation = rotation;
         this.solid = solid;
+        this.sheet = sheet;
+        this.title = title;
+    }
+    
+    public Tile(String sheet, int x, int y,
+    int width, int height, int rotation, boolean solid) {
+        this(sheet, "", x, y, width, height, rotation, solid);
     }
 
-    public Tile(int x, int y, int width, int height, boolean solid) {
-        this(x, y, width, height, 0, solid);
+    public Tile(String sheet, int x, int y,
+    int width, int height, boolean solid) {
+        this(sheet, x, y, width, height, 0, solid);
     }
 
-    public Tile(int x, int y, int width, int height) {
-        this(x, y, width, height, false);
+    public Tile(String sheet, int x, int y, int width, int height) {
+        this(sheet, x, y, width, height, false);
     }
 
     public Tile copy() {
-        return new Tile(x, y, width, height, rotation, solid);
+        Tile copy = new Tile(sheet, title, x, y, width, height, rotation, solid);
+        copy.setTileSet(tileSet);
+        return copy;
     }
 
     public int getX() {
@@ -55,8 +69,21 @@ public class Tile extends Observable implements Serializable {
         return rotation;
     }
 
+    public String getSheet() {
+        return sheet;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public Image getImage() {
+        return tileSet != null ?
+            tileSet.getImage(sheet) : null;
+    }
+
+    public TileSet getTileSet() {
+        return tileSet;
     }
 
     public boolean isSolid() {
@@ -73,5 +100,9 @@ public class Tile extends Observable implements Serializable {
         this.rotation = rotation;
         setChanged();
         notifyObservers();
+    }
+
+    public void setTileSet(TileSet tileSet) {
+        this.tileSet = tileSet;
     }
 }

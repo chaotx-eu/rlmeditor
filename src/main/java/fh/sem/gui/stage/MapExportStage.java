@@ -6,12 +6,8 @@ import java.io.File;
 import fh.sem.App;
 import fh.sem.gui.stage.dialog.ConfirmDialog;
 import fh.sem.gui.stage.dialog.Dialog;
-import fh.sem.logic.Tile;
-import fh.sem.logic.TileMap;
 
-import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.text.*;

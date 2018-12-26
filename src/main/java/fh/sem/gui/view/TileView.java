@@ -10,8 +10,9 @@ public class TileView extends ImageView {
     private DoubleProperty scale;
     private BooleanProperty solid;
 
-    public TileView(Tile tile, Image sheet) {
-        setImage(sheet);
+    public TileView(Tile tile) {
+        // setImage(sheet);
+        setImage(tile.getImage());
         setRotate(tile.getRotation());
         
         // TODO set default image if sheet was not found

@@ -60,11 +60,11 @@ public class NewMapDialog extends Dialog {
 
         btn_cnf.setOnAction(e -> {
             TileSet tileSet = lsv_tiles.getSelectionModel().getSelectedItem();
-            TileMap tileMap = new TileMap(tileSet.getSheet(),
+            TileMap tileMap = new TileMap(
                 Integer.parseInt(txf_wdth.getText()),
                 Integer.parseInt(txf_hght.getText()));
+                
             parent.init(tileMap, tileSet);
-            
             App.projectManager.setActiveProject(null);
             close();
         });

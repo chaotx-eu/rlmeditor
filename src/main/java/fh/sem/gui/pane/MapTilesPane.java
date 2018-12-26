@@ -8,7 +8,6 @@ import fh.sem.logic.Tile;
 import fh.sem.logic.TileSet;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.image.*;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.geometry.*;
@@ -17,7 +16,6 @@ import javafx.beans.property.*;
 public class MapTilesPane extends VBox {
     public static final float TILE_OPACITY = 0.3f;
 
-    private Image sheetIMG;
     private TileSet tileSet;
     private TileView selection;
     private TextField txf_search = new TextField();
@@ -28,9 +26,8 @@ public class MapTilesPane extends VBox {
     private Map<String, IntegerProperty> catCountMap = new HashMap<>();
     private Map<String, Map<String, IntegerProperty>> subCountMap = new HashMap<>();
 
-    public MapTilesPane(Image sheet, TileSet tileSet) {
+    public MapTilesPane(TileSet tileSet) {
         this.tileSet = tileSet;
-        this.sheetIMG = sheet;
         
         VBox vbx_main = new VBox();
         ScrollPane scr_tiles = new ScrollPane(vbx_main);
@@ -156,7 +153,7 @@ public class MapTilesPane extends VBox {
     }
 
     private Pane buildTileView(Tile tile, TileSet tileSet) {
-        TileView tv = new TileView(tile, sheetIMG);
+        TileView tv = new TileView(tile);
         tileViewMap.put(tile, tv);
 
         tv.setOpacity(TILE_OPACITY);
@@ -203,9 +200,5 @@ public class MapTilesPane extends VBox {
         });
 
         return vbx;
-    }
-
-    public Image getSheetIMG() {
-        return sheetIMG;
     }
 }

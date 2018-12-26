@@ -3,8 +3,6 @@ package fh.sem.gui.stage.dialog;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javafx.collections.*;
-import javafx.collections.ListChangeListener.Change;
 
 public class Dialog extends Stage {
     public Dialog(Stage parent) {

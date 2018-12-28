@@ -3,16 +3,15 @@ package fh.sem.gui.pane;
 import java.util.HashMap;
 import java.util.Map;
 
+import fh.sem.gui.pane.bar.ToolBar;
 import fh.sem.gui.view.TileView;
 import fh.sem.logic.Tile;
 import fh.sem.logic.TileMap;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.*;
@@ -30,7 +29,8 @@ public class MapPane extends VBox {
     private DoubleProperty tileSize;
 
     private StringProperty selectionModeName;
-    private DoubleProperty zoom;
+    private IntegerProperty minLayer;
+    private IntegerProperty maxLayer;
     private IntegerProperty layer;
 
     private TileStackPane[][] tileStacks;
@@ -38,11 +38,18 @@ public class MapPane extends VBox {
     private int selectedX;
     private int selectedY;
 
-    private static final double MIN_ZOOM = 0.7f;
+    public static final int MAX_LAYER = 99;
+    private static final double MIN_ZOOM = 0.5f;
     private static final double MAX_ZOOM = 3f;
-    private static final double MIN_TILE_SIZE = 2f;
+
+    private TileMap tileMap;
+    private MapTilesPane tilesPane;
+    private GridPane mapGrid;
 
     public MapPane(TileMap tileMap, MapTilesPane tilesPane) {
+        this.tileMap = tileMap;
+        this.tilesPane = tilesPane;
+        mapGrid = new GridPane();
         tileX = new SimpleIntegerProperty();
         tileY = new SimpleIntegerProperty();
         tileZ = new SimpleIntegerProperty();
@@ -51,50 +58,16 @@ public class MapPane extends VBox {
         tileSolid = new SimpleBooleanProperty();
         tileTitle = new SimpleStringProperty();
         selectionModeName = new SimpleStringProperty();
-        zoom = new SimpleDoubleProperty(1f);
-
-        tileSize.bind(Bindings.max(MIN_TILE_SIZE, Bindings.min(
-            widthProperty().divide(tileMap.getWidth()),
-            heightProperty().divide(tileMap.getHeight()))
-            .multiply(zoom)));
-
-        // ScrollBar scb_zoom = new ScrollBar();
-        // Tooltip tlp_zoom = new Tooltip();
-        // scb_zoom.setMax(MAX_ZOOM*100f);
-        // scb_zoom.setMin(MIN_ZOOM*100f);
-        // scb_zoom.setValue(100f);
-        // scb_zoom.setTooltip(tlp_zoom);
-
-        // zoom.bind(scb_zoom.valueProperty().divide(100f));
-        // tlp_zoom.textProperty().bind(scb_zoom.valueProperty()
-        //     .asString("Zoom: %.0f%%"));
-
-        // setOnZoom(e -> {
-        //     double z = zoom.get() + (1f - e.getZoomFactor());
-        //     scb_zoom.setValue((z < MIN_ZOOM ? MIN_ZOOM
-        //         : z > MAX_ZOOM ? MAX_ZOOM : z)*100f);
-        // });
-
-        // TODO (prototype)
+        minLayer = new SimpleIntegerProperty();
+        maxLayer = new SimpleIntegerProperty();
         layer = new SimpleIntegerProperty();
-        Text txt_layer = new Text();
-        Button btn_layer_plus = new Button("+");
-        Button btn_layer_min = new Button("-");
-        CheckBox chb_layer_show = new CheckBox("Show");
 
-        chb_layer_show.setSelected(true);
-        txt_layer.textProperty().bind(layer.asString("Layer: %3d"));
-        btn_layer_plus.setOnAction((e) -> layer.set(layer.get()+1));
-        btn_layer_min.setOnAction((event) -> layer.set(Math.max(0, layer.get()-1)));
-
-        HBox hbx_layer = new HBox(chb_layer_show, btn_layer_min, txt_layer, btn_layer_plus);
-        hbx_layer.setId("toolbar");
-        hbx_layer.setAlignment(Pos.CENTER_RIGHT);
-        hbx_layer.setSpacing(5);
-        ///////////////////
+        tileSize.bind(Bindings.min(
+            widthProperty().divide(tileMap.getWidth()),
+            heightProperty().divide(tileMap.getHeight())
+        ));
 
         GridPane gdp_out = new GridPane();
-        GridPane gdp_map = initGrid(tileMap, tilesPane);
         RowConstraints rc = new RowConstraints();
         ColumnConstraints cc = new ColumnConstraints();
         rc.setValignment(VPos.CENTER);
@@ -104,15 +77,16 @@ public class MapPane extends VBox {
         rc.setFillHeight(false);
         cc.setFillWidth(false);
 
-        gdp_map.setCursor(Cursor.CROSSHAIR);
+        mapGrid.setCursor(Cursor.CROSSHAIR);
         gdp_out.getRowConstraints().add(rc);
         gdp_out.getColumnConstraints().add(cc);
-        gdp_out.add(gdp_map, 0, 0);
+        gdp_out.add(mapGrid, 0, 0);
 
         ZoomableScrollPane scr_map = new ZoomableScrollPane(gdp_out);
         VBox.setVgrow(scr_map, Priority.ALWAYS);
         scr_map.setMinZoom(MIN_ZOOM);
-        scr_map.setMaxZoom(MAX_ZOOM);
+        scr_map.setMaxZoom(Math.max(MIN_ZOOM, Math.max(
+            tileMap.getWidth(), tileMap.getHeight())/MAX_ZOOM));
 
         gdp_out.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
             scr_map.getViewportBounds().getWidth(), scr_map.viewportBoundsProperty()));
@@ -153,9 +127,10 @@ public class MapPane extends VBox {
                 selectionModeName.set(selectionMode.name());
             }
         });
+
         tgroup_mode.selectToggle(mni_single);
 
-        gdp_map.setOnContextMenuRequested(e -> {
+        mapGrid.setOnContextMenuRequested(e -> {
             if(!selecting)
                 cmu_map.show(scr_map, e.getScreenX(), e.getScreenY());
 
@@ -164,9 +139,10 @@ public class MapPane extends VBox {
 
         scr_map.setOnMouseClicked(e -> cmu_map.hide());
 
+        initGrid();
         setFillWidth(true);
         setAlignment(Pos.CENTER);
-        getChildren().addAll(hbx_layer, scr_map);
+        getChildren().addAll(new ToolBar(this), scr_map);
     }
 
     public SelectionMode getSelectionMode() {
@@ -200,14 +176,58 @@ public class MapPane extends VBox {
     public StringProperty selectionModeNameProperty() {
         return selectionModeName;
     }
+
+    public IntegerProperty minLayerProperty() {
+        return minLayer;
+    }
+
+    public IntegerProperty maxLayerProperty() {
+        return maxLayer;
+    }
+
+    public IntegerProperty layerProperty() {
+        return layer;
+    }
     
     public DoubleProperty tileSize() {
         return tileSize;
     }
 
-    private GridPane initGrid(TileMap tileMap, MapTilesPane tilesPane) {
+    public int getMinLayer() {
+        return minLayer.get();
+    }
+
+    public int getMaxLayer() {
+        return maxLayer.get();
+    }
+
+    public int getLayer() {
+        return layer.get();
+    }
+
+    public void setMinLayer(int layer) {
+        minLayer.set(layer);
+    }
+
+    public void setMaxLayer(int layer) {
+        maxLayer.set(layer);
+    }
+
+    public void setLayer(int layer) {
+        this.layer.set(layer);
+    }
+
+    public TileMap getTileMap() {
+        return tileMap;
+    }
+
+    public TileStackPane[][] getTileStackPanes() {
+        return tileStacks;
+    }
+
+    public void initGrid() {
+        mapGrid.getChildren().clear();
         tileStacks = new TileStackPane[tileMap.getHeight()][];
-        GridPane gdp_map = new GridPane();
         int chb_rid = 0, chb_cid = 1;
         
         for(int y = 0, x; y < tileMap.getHeight(); ++y) {
@@ -308,15 +328,21 @@ public class MapPane extends VBox {
                 });
 
                 tileMap.getTiles(x, y).forEach(tile -> {
-                    if(tile != null)
+                    if(tile != null) {
                         tsp.setPrimary(new TileView(tile), tile.getLayer());
+                        maxLayer.set(Math.max(maxLayer.get(), tile.getLayer()));
+                    }
                 });
                 
-                gdp_map.add(tsp, x, y);
+                mapGrid.add(tsp, x, y);
             }
         }
+    }
 
-        return gdp_map;
+    public void removeTile(Tile tile) {
+        int[] pos = tile.getPosition();
+        tileStacks[pos[1]][pos[0]].removePrimary(pos[2]);
+        tileMap.removeTile(tile);
     }
 
     private Tile getTile(TileMap tileMap, int x, int y, int z) {

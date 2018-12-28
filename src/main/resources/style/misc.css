@@ -11,10 +11,6 @@
     -fx-font-weight: bold;
 }
 
-#toolbar {
-    -fx-background-color: -fx-color-secondary-1-3;
-}
-
 /* Currently unused */
 #stage-bar {
     -fx-background-color: -fx-color-secondary-1-4;

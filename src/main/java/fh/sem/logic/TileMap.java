@@ -1,9 +1,7 @@
 package fh.sem.logic;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,10 +20,11 @@ public class TileMap implements Serializable {
         tiles = new HashMap<>();
         this.width = width;
         this.height = height;
+    }
 
-        // map = new Tile[height][];
-        // for(--height; height >= 0; --height)
-        //     map[height] = new Tile[width];
+    public void addTile(Tile tile) {
+        int[] pos = tile.getPosition();
+        setTile(pos[0], pos[1], pos[2], tile);
     }
 
     public void setTile(int x, int y, Tile tile) {
@@ -35,6 +34,11 @@ public class TileMap implements Serializable {
     public void setTile(int x, int y, int z, Tile tile) {
         tile.setPosition(x, y, z);
         tiles.put(hash(x, y, z), tile);
+    }
+
+    public void removeTile(Tile tile) {
+        int[] pos = tile.getPosition();
+        tiles.remove(hash(pos[0], pos[1], pos[2]));
     }
 
     public Tile getTile(int x, int y) {
@@ -62,7 +66,7 @@ public class TileMap implements Serializable {
     }
 
     public int getHeight() {
-        return width;
+        return height;
     }
 
     protected String hash(int x, int y, int z) {

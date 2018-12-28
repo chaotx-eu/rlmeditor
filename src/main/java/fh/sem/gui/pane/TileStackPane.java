@@ -56,7 +56,8 @@ public class TileStackPane extends StackPane {
                 else if(tile.getLayer() < layer) getChildren().add(i+1, primary);
                 else getChildren().set(i, primary);
             }
-        }
+        } else if(layer >= 0 && layer < getChildren().size())
+            getChildren().remove(layer);
     }
 
     public void setSecondary(TileView secondary) {
@@ -84,12 +85,25 @@ public class TileStackPane extends StackPane {
         setPrimary(null);
     }
 
+    public void removePrimary(int layer) {
+        setPrimary(null, layer);
+    }
+
     public void removeSecondary() {
         setSecondary(null);
     }
 
     public IntegerProperty layerProperty() {
         return layer;
+    }
+
+    public void setVisible(boolean visible, int layer) {
+        getChildren().forEach(child -> {
+            TileView tv = (TileView)child;
+
+            if(tv.getTile().getLayer() == layer)
+                tv.setVisible(visible);
+        });
     }
 
     private void setupTileView(TileView tv) {

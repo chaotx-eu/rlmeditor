@@ -8,6 +8,7 @@ import fh.sem.logic.Tile;
 import fh.sem.logic.TileSet;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.geometry.*;
@@ -155,6 +156,7 @@ public class MapTilesPane extends VBox {
         TileView tv = new TileView(tile);
         tileViewMap.put(tile, tv);
 
+        tv.setCursor(Cursor.HAND);
         tv.setOpacity(TILE_OPACITY);
         tv.setPreserveRatio(true);
         tv.fitWidthProperty().bind(

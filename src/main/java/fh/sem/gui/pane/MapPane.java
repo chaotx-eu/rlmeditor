@@ -10,7 +10,9 @@ import fh.sem.logic.TileMap;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.*;
@@ -36,7 +38,7 @@ public class MapPane extends VBox {
     private int selectedX;
     private int selectedY;
 
-    private static final double MIN_ZOOM = 0.3f;
+    private static final double MIN_ZOOM = 0.7f;
     private static final double MAX_ZOOM = 3f;
     private static final double MIN_TILE_SIZE = 2f;
 
@@ -56,22 +58,22 @@ public class MapPane extends VBox {
             heightProperty().divide(tileMap.getHeight()))
             .multiply(zoom)));
 
-        ScrollBar scb_zoom = new ScrollBar();
-        Tooltip tlp_zoom = new Tooltip();
-        scb_zoom.setMax(MAX_ZOOM*100f);
-        scb_zoom.setMin(MIN_ZOOM*100f);
-        scb_zoom.setValue(100f);
-        scb_zoom.setTooltip(tlp_zoom);
+        // ScrollBar scb_zoom = new ScrollBar();
+        // Tooltip tlp_zoom = new Tooltip();
+        // scb_zoom.setMax(MAX_ZOOM*100f);
+        // scb_zoom.setMin(MIN_ZOOM*100f);
+        // scb_zoom.setValue(100f);
+        // scb_zoom.setTooltip(tlp_zoom);
 
-        zoom.bind(scb_zoom.valueProperty().divide(100f));
-        tlp_zoom.textProperty().bind(scb_zoom.valueProperty()
-            .asString("Zoom: %.0f%%"));
+        // zoom.bind(scb_zoom.valueProperty().divide(100f));
+        // tlp_zoom.textProperty().bind(scb_zoom.valueProperty()
+        //     .asString("Zoom: %.0f%%"));
 
-        setOnZoom(e -> {
-            double z = zoom.get() + (1f - e.getZoomFactor());
-            scb_zoom.setValue((z < MIN_ZOOM ? MIN_ZOOM
-                : z > MAX_ZOOM ? MAX_ZOOM : z)*100f);
-        });
+        // setOnZoom(e -> {
+        //     double z = zoom.get() + (1f - e.getZoomFactor());
+        //     scb_zoom.setValue((z < MIN_ZOOM ? MIN_ZOOM
+        //         : z > MAX_ZOOM ? MAX_ZOOM : z)*100f);
+        // });
 
         // TODO (prototype)
         layer = new SimpleIntegerProperty();
@@ -85,8 +87,9 @@ public class MapPane extends VBox {
         btn_layer_plus.setOnAction((e) -> layer.set(layer.get()+1));
         btn_layer_min.setOnAction((event) -> layer.set(Math.max(0, layer.get()-1)));
 
-        HBox hbx_layer = new HBox(btn_layer_min, txt_layer, btn_layer_plus, chb_layer_show);
-        hbx_layer.setAlignment(Pos.CENTER);
+        HBox hbx_layer = new HBox(chb_layer_show, btn_layer_min, txt_layer, btn_layer_plus);
+        hbx_layer.setId("toolbar");
+        hbx_layer.setAlignment(Pos.CENTER_RIGHT);
         hbx_layer.setSpacing(5);
         ///////////////////
 
@@ -101,12 +104,15 @@ public class MapPane extends VBox {
         rc.setFillHeight(false);
         cc.setFillWidth(false);
 
+        gdp_map.setCursor(Cursor.CROSSHAIR);
         gdp_out.getRowConstraints().add(rc);
         gdp_out.getColumnConstraints().add(cc);
         gdp_out.add(gdp_map, 0, 0);
 
-        ScrollPane scr_map = new ScrollPane(gdp_out);
+        ZoomableScrollPane scr_map = new ZoomableScrollPane(gdp_out);
         VBox.setVgrow(scr_map, Priority.ALWAYS);
+        scr_map.setMinZoom(MIN_ZOOM);
+        scr_map.setMaxZoom(MAX_ZOOM);
 
         gdp_out.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
             scr_map.getViewportBounds().getWidth(), scr_map.viewportBoundsProperty()));
@@ -160,7 +166,7 @@ public class MapPane extends VBox {
 
         setFillWidth(true);
         setAlignment(Pos.CENTER);
-        getChildren().addAll(scb_zoom, scr_map, hbx_layer);
+        getChildren().addAll(hbx_layer, scr_map);
     }
 
     public SelectionMode getSelectionMode() {
@@ -248,23 +254,6 @@ public class MapPane extends VBox {
                         tileZ.set(0);
                         tileRot.set(0);
                     } else {
-                        // int n = -1;
-                        // int z = layer.get();
-
-                        // for(Tile tile = null; tile == null; z += n) {
-                        //     tile = tileMap.getTile(fx, fy, z);
-
-                        //     if(tile != null) {
-                        //         tileSolid.set(tile.isSolid());
-                        //         tileTitle.set(tile.getTitle());
-                        //         tileZ.set(tile.getLayer());
-                        //         tileRot.set(tile.getRotation());
-                        //     } else if(z == 0) {
-                        //         z = layer.get();
-                        //         n = 1;
-                        //     }
-                        // }
-
                         Tile tile = getTile(tileMap, fx, fy, layer.get());
                         if(tile != null) {
                             tileSolid.set(tile.isSolid());

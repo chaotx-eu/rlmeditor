@@ -16,7 +16,7 @@ public class TileSetHandler extends DefaultHandler {
     private XMLNode currentNode;
 
     private String value = "", sheet, category, subcategory, tileTitle;
-    private int tileX, tileY, tileW, tileH, tileRot;
+    private int tileX, tileY, tileW, tileH, tileRot, tileLay;
     private int tileCount = 0;
     private boolean tileSolid;
 
@@ -35,37 +35,42 @@ public class TileSetHandler extends DefaultHandler {
         XMLNode positionNode1 = new XMLNode("position", tileNode1);
         XMLNode sizeNode1 = new XMLNode("size", tileNode1);
         XMLNode rotationNode1 = new XMLNode("rotation", tileNode1);
+        XMLNode layerNode1 = new XMLNode("layer", tileNode1);
         XMLNode solidNode1 = new XMLNode("solid", tileNode1);
         XMLNode positionNode2 = new XMLNode("position", tileNode2);
         XMLNode sizeNode2 = new XMLNode("size", tileNode2);
         XMLNode rotationNode2 = new XMLNode("rotation", tileNode2);
+        XMLNode layerNode2 = new XMLNode("layer", tileNode2);
         XMLNode solidNode2 = new XMLNode("solid", tileNode2);
         XMLNode positionNode3 = new XMLNode("position", tileNode3);
         XMLNode sizeNode3 = new XMLNode("size", tileNode3);
         XMLNode rotationNode3 = new XMLNode("rotation", tileNode3);
+        XMLNode layerNode3 = new XMLNode("layer", tileNode3);
         XMLNode solidNode3 = new XMLNode("solid", tileNode3);
-        // XMLNode layerNode = new XMLNode("layer", tileNode); // TODO
+
         validator = new TileSetValidator(
             tileNode1, tileNode2, tileNode3, sheetNode,
             tileSetNode, categoryNode, subCategoryNode,
-            positionNode1, sizeNode1, rotationNode1, solidNode1,
-            positionNode2, sizeNode2, rotationNode2, solidNode2,
-            positionNode3, sizeNode3, rotationNode3, solidNode3);
+            positionNode1, sizeNode1, rotationNode1, layerNode1, solidNode1,
+            positionNode2, sizeNode2, rotationNode2, layerNode2, solidNode2,
+            positionNode3, sizeNode3, rotationNode3, layerNode3, solidNode3);
 
         validator.setMaxCount(tileSetNode, 1);
         validator.setMaxCount(positionNode1, 1);
         validator.setMaxCount(sizeNode1, 1);
         validator.setMaxCount(rotationNode1, 1);
+        validator.setMaxCount(layerNode1, 1);
         validator.setMaxCount(solidNode1, 1);
         validator.setMaxCount(positionNode2, 1);
         validator.setMaxCount(sizeNode2, 1);
         validator.setMaxCount(rotationNode2, 1);
+        validator.setMaxCount(layerNode2, 1);
         validator.setMaxCount(solidNode2, 1);
         validator.setMaxCount(positionNode3, 1);
         validator.setMaxCount(sizeNode3, 1);
         validator.setMaxCount(rotationNode3, 1);
+        validator.setMaxCount(layerNode3, 1);
         validator.setMaxCount(solidNode3, 1);
-        // validator.setMaxCount(layerNode, 1);
 
         validator.setMinCount(tileSetNode, 1);
         validator.setMinCount(sheetNode, 1);
@@ -91,7 +96,7 @@ public class TileSetHandler extends DefaultHandler {
 
     @Override
     public void startElement(String ns, String localName, String qName, Attributes atts) {
-        // TODO validate parameters
+        // TODO validate attributes
         if(qName.equals("tileSet"))             tileSet.setTitle(atts.getValue("title"));
         else if(qName.equals("category"))       category = atts.getValue("title");
         else if(qName.equals("subcategory"))    subcategory = atts.getValue("title");
@@ -134,6 +139,8 @@ public class TileSetHandler extends DefaultHandler {
                     : Integer.parseInt(size[1]);
             } else if(qName.equals("rotation")) {
                 tileRot = Integer.parseInt(value);
+            } else if(qName.equals("layer")) {
+                tileLay = Integer.parseInt(value);
             } else if(qName.equals("solid")) {
                 String solid = value.trim().toLowerCase();
                 if(solid.equals("true")) tileSolid = true;
@@ -141,7 +148,7 @@ public class TileSetHandler extends DefaultHandler {
                 else throw new IllegalArgumentException();
             } else if(qName.equals("tile")) {
                 Tile tile = new Tile(sheet, tileTitle == null ? ("Tile_" + tileCount++)
-                    : tileTitle, tileX, tileY, tileW, tileH, tileRot, tileSolid);
+                    : tileTitle, tileX, tileY, tileW, tileH, tileRot, tileLay, tileSolid);
 
                 if(category == null)
                     tileSet.addTile(tile);
@@ -154,7 +161,7 @@ public class TileSetHandler extends DefaultHandler {
                 // reset to default
                 tileTitle = null;
                 tileX = tileY = tileW = -1;
-                tileRot = 0;
+                tileRot = tileLay = 0;
                 tileSolid = false;
             } else if(qName.equals("category")) {
                 category = null;

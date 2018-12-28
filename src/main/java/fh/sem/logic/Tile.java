@@ -8,19 +8,26 @@ import java.util.Observable;
 public class Tile extends Observable implements Serializable {
     public static final long serialVersionUID = 0;
 
+    // sprite attributes
     private int x;
     private int y;
     private int width;
     private int height;
-    private int rotation;
-    private boolean solid;
     private String title, sheet;
     private TileSet tileSet;
 
+    // map attributes
+    private int mapX;
+    private int mapY;
+    private int mapZ;
+    private int rotation;
+    private boolean solid;
+
     public Tile(String sheet, String title, int x, int y,
-    int width, int height, int rotation, boolean solid) {
+    int width, int height, int rotation, int layer, boolean solid) {
         this.x = x;
         this.y = y;
+        this.mapZ = layer;
         this.width = width;
         this.height = height;
         this.rotation = rotation;
@@ -29,22 +36,22 @@ public class Tile extends Observable implements Serializable {
         this.title = title;
     }
     
-    public Tile(String sheet, int x, int y,
-    int width, int height, int rotation, boolean solid) {
-        this(sheet, "", x, y, width, height, rotation, solid);
+    public Tile(String sheet, int x, int y, int width, int height,
+    int rotation, int layer, boolean solid) {
+        this(sheet, "", x, y, width, height, rotation, layer, solid);
     }
 
     public Tile(String sheet, int x, int y,
-    int width, int height, boolean solid) {
-        this(sheet, x, y, width, height, 0, solid);
+    int width, int height, int layer, boolean solid) {
+        this(sheet, x, y, width, height, 0, layer, solid);
     }
 
     public Tile(String sheet, int x, int y, int width, int height) {
-        this(sheet, x, y, width, height, false);
+        this(sheet, x, y, width, height, 0, 0, false);
     }
 
     public Tile copy() {
-        Tile copy = new Tile(sheet, title, x, y, width, height, rotation, solid);
+        Tile copy = new Tile(sheet, title, x, y, width, height, rotation, mapZ, solid);
         copy.setTileSet(tileSet);
         return copy;
     }
@@ -67,6 +74,14 @@ public class Tile extends Observable implements Serializable {
     
     public int getRotation() {
         return rotation;
+    }
+
+    public int[] getPosition() {
+        return new int[]{mapX, mapY, mapZ};
+    }
+
+    public int getLayer() {
+        return mapZ;
     }
 
     public String getSheet() {
@@ -102,7 +117,35 @@ public class Tile extends Observable implements Serializable {
         notifyObservers();
     }
 
+    public void setLayer(int layer) {
+        mapZ = layer;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setPosition(int... pos) {
+        if(pos.length != 2 && pos.length != 3)
+            throw new IllegalArgumentException("2 or 3 arguments required (x, y[, z])");
+
+        mapX = pos[0];
+        mapY = pos[1];
+        mapZ = pos.length > 2 ? pos[2] : 0;
+
+        setChanged();
+        notifyObservers();
+    }
+
     public void setTileSet(TileSet tileSet) {
         this.tileSet = tileSet;
+    }
+
+    @Override
+    public int hashCode() {
+        return (sheet + "_" + x + "|" + y + "|" + width + "|" + height).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return hashCode() == other.hashCode();
     }
 }

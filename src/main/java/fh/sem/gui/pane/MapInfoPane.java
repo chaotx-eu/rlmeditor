@@ -11,12 +11,16 @@ public class MapInfoPane extends HBox {
     public MapInfoPane(MapPane mapPane) {
         Label lbl_coordx = new Label("X:");
         Label lbl_coordy = new Label("Y:");
+        Label lbl_coordz = new Label("Z:");
+        Label lbl_rot = new Label("Rotation:");
         Label lbl_solid = new Label("Solid:");
         Label lbl_mode = new Label("Draw Mode:");
 
         Label lbl_title_v = new Label();
         Label lbl_coordx_v = new Label();
         Label lbl_coordy_v = new Label();
+        Label lbl_coordz_v = new Label();
+        Label lbl_rot_v = new Label();
         Label lbl_solid_v = new Label();
         Label lbl_mode_v = new Label();
 
@@ -24,6 +28,8 @@ public class MapInfoPane extends HBox {
             new HBox(lbl_title_v) {{ setAlignment(Pos.CENTER); }},
             new HBox(lbl_coordx, lbl_coordx_v) {{ setAlignment(Pos.CENTER); }},
             new HBox(lbl_coordy, lbl_coordy_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_coordz, lbl_coordz_v) {{ setAlignment(Pos.CENTER); }},
+            new HBox(lbl_rot, lbl_rot_v) {{ setAlignment(Pos.CENTER); }},
             new HBox(lbl_solid, lbl_solid_v) {{ setAlignment(Pos.CENTER); }},
             new HBox(lbl_mode, lbl_mode_v) {{ setAlignment(Pos.CENTER); }}
         );
@@ -34,6 +40,8 @@ public class MapInfoPane extends HBox {
 
         lbl_coordx.setStyle("-fx-font-weight:bold");
         lbl_coordy.setStyle("-fx-font-weight:bold");
+        lbl_coordz.setStyle("-fx-font-weight:bold");
+        lbl_rot.setStyle("-fx-font-weight:bold");
         lbl_solid.setStyle("-fx-font-weight:bold");
         lbl_mode.setStyle("-fx-font-weight:bold");
         lbl_title_v.setStyle("-fx-font-weight:bold");
@@ -41,8 +49,10 @@ public class MapInfoPane extends HBox {
         lbl_title_v.textProperty().bind(Bindings.format("%-13s", mapPane.tileTitleProperty()));
         lbl_solid_v.textProperty().bind(Bindings.format("%-5s", mapPane.tileSolidProperty()));
         lbl_mode_v.textProperty().bind(Bindings.format("%-12s", mapPane.selectionModeNameProperty()));
-        lbl_coordx_v.textProperty().bind(mapPane.tileXProperty().asString("%-4d"));
-        lbl_coordy_v.textProperty().bind(mapPane.tileYProperty().asString("%-4d"));
+        lbl_coordx_v.textProperty().bind(mapPane.tileXProperty().asString("%-3d"));
+        lbl_coordy_v.textProperty().bind(mapPane.tileYProperty().asString("%-3d"));
+        lbl_coordz_v.textProperty().bind(mapPane.tileZProperty().asString("%-3d"));
+        lbl_rot_v.textProperty().bind(mapPane.tileRotationProperty().asString("%3d\u00b0"));
         
         Button btn_import = new Button("Import");
         Button btn_export = new Button("Export");

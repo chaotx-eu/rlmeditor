@@ -26,13 +26,13 @@ public class TileConfigPane extends VBox {
                 lbl_tile_coords.setText("X: " + tile.getX() + ", Y: " + tile.getY());
                 lbl_tile_size.setText("W: " + tile.getWidth() + ", H: " + tile.getHeight());
                 chb_tile_solid.getSelectionModel().select(tile.isSolid() ? 0 : 1);
-                chb_tile_rotat.getSelectionModel().select(tile.getRotation() + "deg");
+                chb_tile_rotat.getSelectionModel().select(tile.getRotation() + "\u00b0");
                 mapTilesPane.setSelectionChanged(false);
             }
         });
 
         chb_tile_solid.getItems().addAll("True", "False");
-        chb_tile_rotat.getItems().addAll("0deg", "90deg", "180deg", "270deg");
+        chb_tile_rotat.getItems().addAll("0\u00b0", "90\u00b0", "180\u00b0", "270\u00b0");
 
         chb_tile_solid.setOnAction(e -> {
             if(mapTilesPane.getSelection() != null) {
@@ -49,7 +49,7 @@ public class TileConfigPane extends VBox {
                     .getSelectionModel()
                     .getSelectedItem();
 
-                rotStr =  rotStr.substring(0, rotStr.length()-3);
+                rotStr =  rotStr.substring(0, rotStr.length()-1);
                 int rot = Integer.parseInt(rotStr);
                 
                 mapTilesPane.getSelection().setRotate(rot);

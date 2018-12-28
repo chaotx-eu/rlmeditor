@@ -1,5 +1,7 @@
 package fh.sem.logic;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,11 +15,19 @@ import javafx.scene.image.Image;
 public class TileSet implements Serializable {
     public static final long serialVersionUID = 0;
 
-    private String title = "";
-    private List<Tile> topLevelTiles = new ArrayList<>();
-    private Map<String, List<Tile>> categories = new HashMap<>();
-    private Map<String, Map<String, List<Tile>>> subCategories = new HashMap<>();
-    private Map<String, Image> imageMap = new HashMap<>();
+    private String title;
+    private List<Tile> topLevelTiles;
+    private Map<String, List<Tile>> categories;
+    private Map<String, Map<String, List<Tile>>> subCategories;
+    private transient Map<String, Image> imageMap;
+
+    public TileSet() {
+        title =  "";
+        topLevelTiles = new ArrayList<>();
+        categories = new HashMap<>();
+        subCategories = new HashMap<>();
+        imageMap = new HashMap<>();
+    }
 
     public void addTile(Tile tile, String category, String subCategory) {
         if(!categories.containsKey(category))
@@ -96,11 +106,6 @@ public class TileSet implements Serializable {
         return imageMap.get(path);
     }
 
-    @Override
-    public String toString() {
-        return getTitle();
-    }
-
     protected void initTile(Tile tile) {
         tile.setTileSet(this);
         if(!imageMap.containsKey(tile.getSheet())) {
@@ -108,5 +113,22 @@ public class TileSet implements Serializable {
                 .resourceManager
                 .get(tile.getSheet())));
         }
+    }
+
+    @Override
+    public String toString() {
+        return getTitle();
+    }
+
+    // init images after deserialization
+    // see https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html
+    private void readObject(ObjectInputStream ois)
+    throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        imageMap = new HashMap<>();
+        topLevelTiles.forEach(this::initTile);
+        categories.values().forEach(list -> list.forEach(this::initTile));        
+        subCategories.values().forEach(map -> map.values()
+            .forEach(list -> list.forEach(this::initTile)));
     }
 }

@@ -9,6 +9,7 @@ import fh.sem.logic.TileMap;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -18,13 +19,17 @@ public class MapPane extends VBox {
     public enum SelectionMode {None, Single, Rectangular}
     private SelectionMode selectionMode;
 
-    private IntegerProperty  tileX;
-    private IntegerProperty  tileY;
+    private IntegerProperty tileX;
+    private IntegerProperty tileY;
+    private IntegerProperty tileZ;
+    private IntegerProperty tileRot;
     private BooleanProperty tileSolid;
-    private StringProperty  tileTitle;
-    private DoubleProperty  tileSize;
-    private StringProperty  selectionModeName;
+    private StringProperty tileTitle;
+    private DoubleProperty tileSize;
+
+    private StringProperty selectionModeName;
     private DoubleProperty zoom;
+    private IntegerProperty layer;
 
     private TileStackPane[][] tileStacks;
     private boolean selecting;
@@ -38,6 +43,8 @@ public class MapPane extends VBox {
     public MapPane(TileMap tileMap, MapTilesPane tilesPane) {
         tileX = new SimpleIntegerProperty();
         tileY = new SimpleIntegerProperty();
+        tileZ = new SimpleIntegerProperty();
+        tileRot = new SimpleIntegerProperty();
         tileSize = new SimpleDoubleProperty();
         tileSolid = new SimpleBooleanProperty();
         tileTitle = new SimpleStringProperty();
@@ -65,6 +72,23 @@ public class MapPane extends VBox {
             scb_zoom.setValue((z < MIN_ZOOM ? MIN_ZOOM
                 : z > MAX_ZOOM ? MAX_ZOOM : z)*100f);
         });
+
+        // TODO (prototype)
+        layer = new SimpleIntegerProperty();
+        Text txt_layer = new Text();
+        Button btn_layer_plus = new Button("+");
+        Button btn_layer_min = new Button("-");
+        CheckBox chb_layer_show = new CheckBox("Show");
+
+        chb_layer_show.setSelected(true);
+        txt_layer.textProperty().bind(layer.asString("Layer: %3d"));
+        btn_layer_plus.setOnAction((e) -> layer.set(layer.get()+1));
+        btn_layer_min.setOnAction((event) -> layer.set(Math.max(0, layer.get()-1)));
+
+        HBox hbx_layer = new HBox(btn_layer_min, txt_layer, btn_layer_plus, chb_layer_show);
+        hbx_layer.setAlignment(Pos.CENTER);
+        hbx_layer.setSpacing(5);
+        ///////////////////
 
         GridPane gdp_out = new GridPane();
         GridPane gdp_map = initGrid(tileMap, tilesPane);
@@ -107,10 +131,11 @@ public class MapPane extends VBox {
         mni_single.setToggleGroup(tgroup_mode);
         mni_rectan.setToggleGroup(tgroup_mode);
 
-        mni_copy.setOnAction(e -> {
-            TileView tv = tileStacks[tileY.get()][tileX.get()].getPrimary();
-            if(tv != null) tilesPane.select(tv.getTile());
-        });
+        mni_copy.setOnAction(e
+            -> tilesPane.select(getTile(
+                tileMap, tileX.get(),
+                tileY.get(), tileZ.get())
+        ));
 
         Map<Toggle, SelectionMode> tggModeMap = new HashMap<>();
         tggModeMap.put(mni_none, SelectionMode.None);
@@ -135,7 +160,7 @@ public class MapPane extends VBox {
 
         setFillWidth(true);
         setAlignment(Pos.CENTER);
-        getChildren().addAll(scb_zoom, scr_map);
+        getChildren().addAll(scb_zoom, scr_map, hbx_layer);
     }
 
     public SelectionMode getSelectionMode() {
@@ -148,6 +173,14 @@ public class MapPane extends VBox {
 
     public IntegerProperty tileYProperty() {
         return tileY;
+    }
+
+    public IntegerProperty tileZProperty() {
+        return tileZ;
+    }
+
+    public IntegerProperty tileRotationProperty() {
+        return tileRot;
     }
 
     public BooleanProperty tileSolidProperty() {
@@ -178,6 +211,7 @@ public class MapPane extends VBox {
 
             for(x = 0; x < tileMap.getWidth(); ++x) {
                 TileStackPane tsp = new TileStackPane();
+                tsp.layerProperty().bind(layer);
                 tsp.setId("check-board-" + (x > 0 ? chb_rid : chb_cid));
                 tsp.prefWidthProperty().bind(tileSize);
                 tsp.prefHeightProperty().bind(tileSize);
@@ -205,16 +239,39 @@ public class MapPane extends VBox {
                         }
                     }
 
-                    Tile tile = tileMap.getTile(fx, fy);
                     tileX.set(fx);
                     tileY.set(fy);
-
-                    if(tile != null) {
-                        tileSolid.set(tile.isSolid());
-                        tileTitle.set(tile.getTitle());
-                    } else {
-                        tileSolid.set(true);
+                    
+                    if(tileMap.getTiles(fx, fy).isEmpty()) {
+                        tileSolid.set(false);
                         tileTitle.set("~");
+                        tileZ.set(0);
+                        tileRot.set(0);
+                    } else {
+                        // int n = -1;
+                        // int z = layer.get();
+
+                        // for(Tile tile = null; tile == null; z += n) {
+                        //     tile = tileMap.getTile(fx, fy, z);
+
+                        //     if(tile != null) {
+                        //         tileSolid.set(tile.isSolid());
+                        //         tileTitle.set(tile.getTitle());
+                        //         tileZ.set(tile.getLayer());
+                        //         tileRot.set(tile.getRotation());
+                        //     } else if(z == 0) {
+                        //         z = layer.get();
+                        //         n = 1;
+                        //     }
+                        // }
+
+                        Tile tile = getTile(tileMap, fx, fy, layer.get());
+                        if(tile != null) {
+                            tileSolid.set(tile.isSolid());
+                            tileTitle.set(tile.getTitle());
+                            tileZ.set(tile.getLayer());
+                            tileRot.set(tile.getRotation());
+                        }
                     }
                 });
 
@@ -233,7 +290,7 @@ public class MapPane extends VBox {
                                         .setPrimary(tileStacks[ty][vx]
                                         .getSecondary());
 
-                                    tileMap.setTile(vx, ty, tileStacks[ty][vx].getPrimary() == null ?
+                                    tileMap.setTile(vx, ty, layer.get(), tileStacks[ty][vx].getPrimary() == null ?
                                         null : tileStacks[ty][vx].getPrimary().getTile().copy());
                                 }
 
@@ -251,7 +308,7 @@ public class MapPane extends VBox {
                             }
                         } else if(selectionMode == SelectionMode.Single) {
                             tsp.setPrimary(new TileView(tilesPane.getSelection().getTile()));
-                            tileMap.setTile(fx, fy, tsp.getPrimary().getTile().copy());
+                            tileMap.setTile(fx, fy, layer.get(), tsp.getPrimary().getTile().copy());
                         }
                     } else if(e.getButton() == MouseButton.SECONDARY) {
                         if(selecting)
@@ -261,13 +318,36 @@ public class MapPane extends VBox {
                     }
                 });
 
-                if(tileMap.getTile(x, y) != null)
-                    tsp.setPrimary(new TileView(tileMap.getTile(x, y)));
-                    
+                tileMap.getTiles(x, y).forEach(tile -> {
+                    if(tile != null)
+                        tsp.setPrimary(new TileView(tile), tile.getLayer());
+                });
+                
                 gdp_map.add(tsp, x, y);
             }
         }
 
         return gdp_map;
+    }
+
+    private Tile getTile(TileMap tileMap, int x, int y, int z) {
+        if(tileMap.getTiles(x, y).size() == 0) return null;
+        Tile tile = null;
+
+        for(int n = -1; tile == null; z += n) {
+            tile = tileMap.getTile(x, y, z);
+
+            if(tile != null) {
+                tileSolid.set(tile.isSolid());
+                tileTitle.set(tile.getTitle());
+                tileZ.set(tile.getLayer());
+                tileRot.set(tile.getRotation());
+            } else if(z == 0) {
+                z = layer.get();
+                n = 1;
+            }
+        }
+
+        return tile;
     }
 }

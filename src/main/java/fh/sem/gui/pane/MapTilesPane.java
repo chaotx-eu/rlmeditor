@@ -137,7 +137,6 @@ public class MapTilesPane extends VBox {
         if(selection != null) {
             selection.setOpacity(TILE_OPACITY);
             selection.setScale(1);
-
         }
 
         TileView tv;

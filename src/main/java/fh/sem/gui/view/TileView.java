@@ -5,10 +5,10 @@ import javafx.scene.image.*;
 import javafx.geometry.*;
 import javafx.beans.property.*;
 
+
 public class TileView extends ImageView {
     private Tile tile;
     private DoubleProperty scale;
-    private BooleanProperty solid;
 
     public TileView(Tile tile) {
         // setImage(sheet);
@@ -27,16 +27,10 @@ public class TileView extends ImageView {
 
         this.tile = tile;
         scale = new SimpleDoubleProperty(1);
-        solid = new SimpleBooleanProperty(tile.isSolid());
-        tile.addObserver((o, a) -> solid.set(tile.isSolid()));
     }
     
     public Tile getTile() {
         return tile;
-    }
-    
-    public boolean isSolid() {
-        return solid.get();
     }
 
     public void setScale(double scale) {
@@ -49,9 +43,5 @@ public class TileView extends ImageView {
 
     public DoubleProperty scaleProperty() {
         return scale;
-    }
-
-    public BooleanProperty solidProperty() {
-        return solid;
     }
 }

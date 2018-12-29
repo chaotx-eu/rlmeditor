@@ -57,22 +57,19 @@ public class MapManager {
             z = tile.getLayer();
             sheet = tile.getSheet()
                 .replaceFirst(Pattern.quote(App.APP_DIR + File.separator), "")
+                .replaceFirst("[.].*", "")
                 .replace(File.separator, "/"); // most common seperator
 
             sb.append("\t\t\t<Tile>\n");
-            sb.append("\t\t\t\t<SpriteSheet>"
-                + sheet + "</SpriteSheet>\n");
+            sb.append("\t\t\t\t<SpriteSheet>" + sheet + "</SpriteSheet>\n");
             sb.append("\t\t\t\t<SpriteRectangle>"
                 + tile.getX() + " " + tile.getY() + " "
-                + tile.getWidth() + " "
-                + tile.getHeight() + "</SpriteRectangle>\n");
-            sb.append("\t\t\t\t<Position>"
-                + x + " " + y
-                + "</Position>\n");
-            sb.append("\t\t\t\t<Rotation>"
-                + tile.getRotation() + "</Rotation>\n");
-            sb.append("\t\t\t\t<Layer>" + z + "</Layer>\n");
+                + tile.getWidth() + " " + tile.getHeight()
+                + "</SpriteRectangle>\n");
+            sb.append("\t\t\t\t<Rotation>" + tile.getRotation() + "</Rotation>\n");
+            sb.append("\t\t\t\t<Position>" + x + " " + y + "</Position>\n");
             sb.append("\t\t\t\t<Solid>" + tile.isSolid() + "</Solid>\n");
+            sb.append("\t\t\t\t<Layer>" + z + "</Layer>\n");
             sb.append("\t\t\t</Tile>\n");
         }
         

@@ -18,7 +18,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
     public static PrintStream log;
-    public static final String APP_TITLE = "RLMEditor";
+    public static final String APP_TITLE = "RLMEditor"; // TODO new title "TAOS" (The art of square)
     public static final MapManager mapManager = MapManager.instance();
     public static final ProjectManager projectManager = ProjectManager.instance();
     public static final ResourceManager resourceManager = ResourceManager.instance();

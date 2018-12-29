@@ -20,8 +20,8 @@ public class Dialog extends Stage {
         initModality(Modality.WINDOW_MODAL);
 
         setResizable(false);
-        // setMaxWidth(parent.getWidth()*0.8f);
-        // setMaxHeight(parent.getHeight()*0.8f);
+        setMaxWidth(parent.getWidth());
+        setMaxHeight(parent.getHeight());
         setTitle(parent_title + (!title.isEmpty() ? " - " + title : ""));
         sceneProperty().addListener((p, o, n) -> {
             if(o == null && n != null)

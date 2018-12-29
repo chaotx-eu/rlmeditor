@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -44,35 +45,35 @@ public class MapManager {
     }
 
     public String parseMap(TileMap map, String title) {
+        String sheet;
         StringBuilder sb = new StringBuilder();
         sb.append(MAP_XML_HEAD);
         sb.append("\t\t<Title>" + title + "</Title>\n");
         sb.append("\t\t<Tiles>\n");
 
-        // TODO better support for different image files
-        String sheet = "TODO";
+        for(int y = 0, x, z; y < map.getHeight(); ++y)
+        for(x = 0; x < map.getWidth(); ++x)
+        for(Tile tile : map.getTiles(x, y)) {
+            z = tile.getLayer();
+            sheet = tile.getSheet()
+                .replaceFirst(Pattern.quote(App.APP_DIR + File.separator), "")
+                .replace(File.separator, "/"); // most common seperator
 
-        for(int y = 0, x; y < map.getHeight(); ++y) {
-            for(x = 0; x < map.getWidth(); ++x) {
-                Tile tile = map.getTile(x, y);
-
-                if(tile != null) {
-                    sb.append("\t\t\t<Tile>\n");
-                    sb.append("\t\t\t\t<SpriteSheet>"
-                        + sheet + "</SpriteSheet>\n");
-                    sb.append("\t\t\t\t<SpriteRectangle>"
-                        + tile.getX() + " " + tile.getY() + " "
-                        + tile.getWidth() + " "
-                        + tile.getHeight() + "</SpriteRectangle>\n");
-                    sb.append("\t\t\t\t<Rotation>"
-                        + tile.getRotation() + "</Rotation>\n");
-                    sb.append("\t\t\t\t<Position>"
-                        + x + " " + y
-                        + "</Position>\n");
-                    sb.append("\t\t\t\t<Solid>" + tile.isSolid() + "</Solid>\n");
-                    sb.append("\t\t\t</Tile>\n");
-                }
-            }
+            sb.append("\t\t\t<Tile>\n");
+            sb.append("\t\t\t\t<SpriteSheet>"
+                + sheet + "</SpriteSheet>\n");
+            sb.append("\t\t\t\t<SpriteRectangle>"
+                + tile.getX() + " " + tile.getY() + " "
+                + tile.getWidth() + " "
+                + tile.getHeight() + "</SpriteRectangle>\n");
+            sb.append("\t\t\t\t<Position>"
+                + x + " " + y
+                + "</Position>\n");
+            sb.append("\t\t\t\t<Rotation>"
+                + tile.getRotation() + "</Rotation>\n");
+            sb.append("\t\t\t\t<Layer>" + z + "</Layer>\n");
+            sb.append("\t\t\t\t<Solid>" + tile.isSolid() + "</Solid>\n");
+            sb.append("\t\t\t</Tile>\n");
         }
         
         sb.append("\t\t</Tiles>\n");
